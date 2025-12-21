@@ -1,0 +1,595 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woolly Bunny Game OFFICIAL WEBSITE</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { scroll-behavior: smooth; }
+        body { font-family: 'Roboto Mono', monospace; }
+        h1, h2, h3, h4 { font-family: 'Oswald', sans-serif; letter-spacing: 0.05em; }
+        
+        /* Постапокалиптический градиент */
+        .hero-bg { 
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2418 50%, #1a1a1a 100%);
+            position: relative;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        .card-hover { transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; }
+        .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-color: #b45309;
+        }
+        
+        .nav-link { position: relative; }
+        .nav-link::after { 
+            content: ''; position: absolute; bottom: -2px; left: 0; 
+            width: 0; height: 2px; background: #d97706; transition: width 0.3s; 
+        }
+        .nav-link:hover::after { width: 100%; }
+        
+        /* Эффект сканлайнов */
+        .scanlines::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.1) 2px,
+                rgba(0, 0, 0, 0.1) 4px
+            );
+            pointer-events: none;
+        }
+        
+        /* Стиль для иконки игры */
+        .game-icon {
+            border: 3px solid #78716c;
+            box-shadow: 0 0 30px rgba(217, 119, 6, 0.3);
+        }
+        
+        .screenshot {
+            border: 2px solid #44403c;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .screenshot:hover {
+            border-color: #d97706;
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.3);
+        }
+        
+        /* Лайтбокс */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border: 3px solid #44403c;
+            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: #a8a29e;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+        .lightbox-close:hover {
+            color: #d97706;
+        }
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 50px;
+            color: #a8a29e;
+            cursor: pointer;
+            transition: color 0.3s;
+            user-select: none;
+            padding: 20px;
+        }
+        .lightbox-nav:hover {
+            color: #d97706;
+        }
+        .lightbox-prev {
+            left: 20px;
+        }
+        .lightbox-next {
+            right: 20px;
+        }
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #78716c;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="bg-neutral-950 text-stone-300">
+
+    <!-- ========== НАВИГАЦИЯ ========== -->
+    <nav class="fixed top-0 left-0 right-0 bg-neutral-950/95 backdrop-blur-sm z-50 border-b border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-xl font-bold text-amber-600 font-['Oswald'] tracking-wider">WOOLLY BUNNY</a>
+            <div class="hidden md:flex gap-6">
+                <!-- Добавляй или удаляй вкладки здесь -->
+                <a href="#about" class="nav-link text-stone-400 hover:text-stone-200">Об игре</a>
+                <a href="#screenshots" class="nav-link text-stone-400 hover:text-stone-200">Скриншоты</a>
+                <a href="#download" class="nav-link text-stone-400 hover:text-stone-200">Скачать</a>
+                <a href="#patchnotes" class="nav-link text-stone-400 hover:text-stone-200">Патчноуты</a>
+                <a href="#team" class="nav-link text-stone-400 hover:text-stone-200">О нас</a>
+                <a href="#thanks" class="nav-link text-stone-400 hover:text-stone-200">Благодарности</a>
+            </div>
+            <button id="mobileMenuBtn" class="md:hidden text-2xl text-stone-400">☰</button>
+        </div>
+        <!-- Мобильное меню -->
+        <div id="mobileMenu" class="hidden md:hidden bg-neutral-900 px-4 py-4 border-t border-stone-800">
+            <a href="#about" class="block py-2 text-stone-400 hover:text-stone-200">Об игре</a>
+            <a href="#screenshots" class="block py-2 text-stone-400 hover:text-stone-200">Скриншоты</a>
+            <a href="#download" class="block py-2 text-stone-400 hover:text-stone-200">Скачать</a>
+            <a href="#patchnotes" class="block py-2 text-stone-400 hover:text-stone-200">Патчноуты</a>
+            <a href="#team" class="block py-2 text-stone-400 hover:text-stone-200">О нас</a>
+            <a href="#thanks" class="block py-2 text-stone-400 hover:text-stone-200">Благодарности</a>
+        </div>
+    </nav>
+
+    <!-- ========== ГЛАВНЫЙ ЭКРАН (HERO) ========== -->
+    <section id="hero" class="hero-bg min-h-screen flex items-center justify-center text-center px-4 pt-20 relative">
+        <div class="relative z-10">
+            <!-- ИКОНКА ИГРЫ — замени src на путь к своей иконке -->
+            <div class="mb-8">
+                <div class="w-40 h-40 mx-auto game-icon rounded-xl bg-neutral-800 flex items-center justify-center overflow-hidden">
+                    <img src="20251221_020715.jpg" alt="Woolly Bunny" class="w-full h-full object-cover">
+                </div>
+            </div>
+            
+            <!-- Название игры -->
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 text-stone-100 tracking-wide">WOOLLY BUNNY</h1>
+            
+            <!-- Жанр/подзаголовок -->
+            <p class="text-lg md:text-xl text-amber-600 mb-6 tracking-widest uppercase">Визуальная новелла</p>
+            
+            <!-- Слоган — измени на свой -->
+            <p class="text-xl md:text-2xl text-stone-400 mb-10 max-w-2xl mx-auto">
+                Глобальная катастрофа хранит в себе тайны. Пора раскрыть их.
+            </p>
+            
+            <a href="#download" class="inline-block bg-amber-700 hover:bg-amber-600 text-stone-100 font-bold px-8 py-4 rounded text-lg transition-colors border border-amber-600 hover:border-amber-500 shadow-lg shadow-amber-900/30">
+                СКАЧАТЬ ДЕМО
+            </a>
+        </div>
+        
+        <!-- Декоративная линия -->
+        <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-stone-700 to-transparent"></div>
+    </section>
+
+    <!-- ========== ОБ ИГРЕ ========== -->
+    <section id="about" class="py-20 px-4 bg-neutral-900 relative">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 text-stone-100 tracking-wide">ОБ ИГРЕ</h2>
+            
+            <!-- Описание игры -->
+            <div class="bg-neutral-800/50 border border-stone-700 rounded-lg p-8 mb-8">
+                <p class="text-lg text-stone-300 leading-relaxed mb-6">
+                    <strong class="text-amber-500">Woolly Bunny</strong> — это 2D визуальная новелла в сеттинге постапокалипсиса, где мир рухнул от внутренних зависимостей людей. После катастрофы выжившие разделились на тех, кто пытается сохранить человечность, и тех, кто окончательно ее потерял.
+                    Через игровых персонажей и обстановку вы увидите последствия этой катастрофы и сможете задуматься о природе человеческой морали, надежды и выживания.
+                    Игра вдохновлена такими игровыми проектами, как <em class="italic">"Dying Light"</em>, <em class="italic">"The Last of Us"</em> и др.
+                </p>
+                <p class="text-lg text-stone-300 leading-relaxed mb-6">
+                    Игрок берет на себя роль Илая — человека, вынужденного выживать в этом мире и постоянно делать выбор. Каждый поступок формирует один из моральных путей — <strong class="text-red-500">Кровожадность</strong>, <strong class="text-blue-500">Благородство</strong> или <strong class="text-pink-500">Любовь</strong>, - меняя характер героя, отношение окружающих и ход сюжета.
+                </p>
+                
+                <!-- Особенности игры -->
+                <h3 class="text-2xl font-bold mb-4 text-stone-100 tracking-wide">ОСОБЕННОСТИ</h3>
+                <ul class="grid md:grid-cols-2 gap-4">
+                    <!-- Добавляй или удаляй особенности -->
+                    <li class="flex items-center gap-3 text-stone-300">
+                        <span class="text-amber-600">▸</span> Атмосферный постапокалиптический мир
+                    </li>
+                    <li class="flex items-center gap-3 text-stone-300">
+                        <span class="text-amber-600">▸</span> Выборы, формирующие моральные пути героя
+                    </li>
+                    <li class="flex items-center gap-3 text-stone-300">
+                        <span class="text-amber-600">▸</span> Ветвящийся сюжет с последствиями решений
+                    </li>
+                    <li class="flex items-center gap-3 text-stone-300">
+                        <span class="text-amber-600">▸</span> Персонажи, вдохновленные реальными людьми
+                    </li>
+                    <li class="flex items-center gap-3 text-stone-300">
+                        <span class="text-amber-600">▸</span> Оригинальный саундтрек
+                    </li>
+                    <li class="flex items-center gap-3 text-stone-300">
+                        <span class="text-amber-600">▸</span> Затрагивание актуальных тем человечества
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+<!-- ========== СКРИНШОТЫ ========== -->
+    <section id="screenshots" class="py-20 px-4 bg-neutral-950">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 text-stone-100 tracking-wide">СКРИНШОТЫ</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- СКРИНШОТ 1 — замени src на путь к своему скриншоту -->
+                <div class="screenshot rounded-lg overflow-hidden bg-neutral-800 aspect-video flex items-center justify-center" onclick="openLightbox(0)">
+                    <img src="image_2025-12-21_02-21-36.png" alt="Скриншот 1" class="w-full h-full object-cover screenshot-img">
+                </div>
+                
+                <!-- СКРИНШОТ 2 -->
+                <div class="screenshot rounded-lg overflow-hidden bg-neutral-800 aspect-video flex items-center justify-center" onclick="openLightbox(1)">
+                    <img src="image_2025-12-21_02-22-07.png" alt="Скриншот 2" class="w-full h-full object-cover screenshot-img">
+                </div>
+                
+                <!-- СКРИНШОТ 3 -->
+                <div class="screenshot rounded-lg overflow-hidden bg-neutral-800 aspect-video flex items-center justify-center" onclick="openLightbox(2)">
+                    <img src="image_2025-12-21_02-22-40.png" alt="Скриншот 3" class="w-full h-full object-cover screenshot-img">
+                </div>
+                
+                <!-- СКРИНШОТ 4 -->
+                <div class="screenshot rounded-lg overflow-hidden bg-neutral-800 aspect-video flex items-center justify-center" onclick="openLightbox(3)">
+                    <img src="image_2025-12-21_02-23-20.png" alt="Скриншот 4" class="w-full h-full object-cover screenshot-img">
+                </div>
+                
+                <!-- СКРИНШОТ 5 -->
+                <div class="screenshot rounded-lg overflow-hidden bg-neutral-800 aspect-video flex items-center justify-center" onclick="openLightbox(4)">
+                    <img src="image_2025-12-21_02-23-58.png" alt="Скриншот 5" class="w-full h-full object-cover screenshot-img">
+                </div>
+                
+                <!-- СКРИНШОТ 6 -->
+                <div class="screenshot rounded-lg overflow-hidden bg-neutral-800 aspect-video flex items-center justify-center" onclick="openLightbox(5)">
+                    <img src="image_2025-12-16_23-23-25.png" alt="Скриншот 6" class="w-full h-full object-cover screenshot-img">
+                </div>
+            </div>
+            
+            <p class="text-center text-stone-500 mt-6 text-sm">
+                Нажмите на скриншот для увеличения
+            </p>
+        </div>
+    </section>
+    
+    <!-- ========== ЛАЙТБОКС ========== -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+        <span class="lightbox-nav lightbox-prev" onclick="changeSlide(-1, event)">&#10094;</span>
+        <img id="lightbox-img" src="" alt="Скриншот">
+        <span class="lightbox-nav lightbox-next" onclick="changeSlide(1, event)">&#10095;</span>
+        <div class="lightbox-counter">
+            <span id="lightbox-current">1</span> / <span id="lightbox-total">6</span>
+        </div>
+    </div>
+
+    <!-- ========== СКАЧАТЬ ========== -->
+    <section id="download" class="py-20 px-4 bg-neutral-900">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 text-stone-100 tracking-wide">СКАЧАТЬ ДЕМО</h2>
+            
+            <!-- Кнопка скачивания -->
+            <div class="text-center mb-12">
+                <a href="ВСТАВЬ_ССЫЛКУ_НА_ФАЙЛ" 
+                   download
+                   class="inline-block bg-gradient-to-r from-amber-700 to-orange-800 text-stone-100 font-bold px-12 py-5 rounded text-xl hover:from-amber-600 hover:to-orange-700 transition-all transform hover:scale-105 shadow-lg border border-amber-600/50">
+                    ⬇ СКАЧАТЬ WOOLLY BUNNY DEMO v0.10.0 (90)
+                </a>
+                <p class="text-stone-500 mt-4">Размер: ~1.8 GB | Windows</p>
+            </div>
+
+            <!-- Инструкция по установке -->
+            <div class="bg-neutral-800/50 border border-stone-700 rounded-lg p-8 mb-8">
+                <h3 class="text-2xl font-bold mb-6 text-emerald-500 tracking-wide">ИНСТРУКЦИЯ ПО УСТАНОВКЕ</h3>
+                <ol class="space-y-4 text-stone-300">
+                    <!-- Редактируй шаги установки -->
+                    <li class="flex gap-4">
+                        <span class="bg-amber-700 text-stone-100 w-8 h-8 rounded flex items-center justify-center font-bold shrink-0 text-sm">1</span>
+                        <span>Скачайте архив с демо-версией игры</span>
+                    </li>
+                    <li class="flex gap-4">
+                        <span class="bg-amber-700 text-stone-100 w-8 h-8 rounded flex items-center justify-center font-bold shrink-0 text-sm">2</span>
+                        <span>Распакуйте архив в любую удобную папку</span>
+                    </li>
+                    <li class="flex gap-4">
+                        <span class="bg-amber-700 text-stone-100 w-8 h-8 rounded flex items-center justify-center font-bold shrink-0 text-sm">3</span>
+                        <span>Запустите файл <code class="bg-neutral-700 px-2 py-0.5 rounded text-amber-400">WoollyBunny.exe</code></span>
+                    </li>
+                    <li class="flex gap-4">
+                        <span class="bg-amber-700 text-stone-100 w-8 h-8 rounded flex items-center justify-center font-bold shrink-0 text-sm">4</span>
+                        <span>Наслаждайтесь игрой!</span>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Предупреждения -->
+            <div class="bg-red-950/30 border border-red-900/50 rounded-lg p-8">
+                <h3 class="text-2xl font-bold mb-6 text-red-500 tracking-wide">⚠ ПРЕДУПРЕЖДЕНИЯ</h3>
+                <ul class="space-y-3 text-stone-300">
+                    <!-- Добавляй свои предупреждения -->
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">!</span>
+                        <span>Это демо-версия — возможны баги и нестабильности</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">!</span>
+                        <span>Сохранения из демо могут не работать в финальной версии</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">!</span>
+                        <span>Windows может показать предупреждение SmartScreen — нажмите "Подробнее" → "Выполнить в любом случае"</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">!</span>
+                        <span>Контент демо не отражает финальное качество продукта</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ПАТЧНОУТЫ ========== -->
+    <section id="patchnotes" class="py-20 px-4 bg-neutral-950">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 text-stone-100 tracking-wide">ПАТЧНОУТЫ</h2>
+            
+            <div class="space-y-6">
+                <!-- ПАТЧНОУТ — копируй этот блок для новых версий -->
+                <div class="bg-neutral-800/50 border border-stone-700 rounded-lg p-6 card-hover">
+                    <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+                        <h3 class="text-xl font-bold text-stone-100">Версия 0.10.0 (90) — Выпуск демо</h3>
+                        <span class="text-amber-600 text-sm font-mono">23.12.2025</span>
+                    </div>
+                    <ul class="space-y-2 text-stone-300 font-mono text-sm">
+                    <h5 class="text-xl font-bold text-stone-100">Основные изменения</h5>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Публичный релиз демо-версии.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Доступны 1-я глава «Мир» (Пролог) и 2-я глава «Элизиум». В рамках демоверсии некоторые механики из них вырезаны.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена возможность сохранения сюжетного прогресса.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлено рабочее меню Паузы. Теперь можно в любой момент нажать кнопку «Esc» и приостановить игру.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены «Настройки».</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены звуковые эффекты и настройка их громкости (самого звука в игре пока нет).</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> В сюжете стало больше вариативности.</li>
+                    <h5 class="text-xl font-bold text-stone-100">Исправления и улучшения</h5>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена иконка около имени в тех моментах, где персонажи говорят по рации.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления текста в репликах.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены плавные переходы в смене роли слушающего и говорящего, а также в смене моделек.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления диалогового окна.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления уведомления о новом предмете в инвентаре.</li>
+                        <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления сюжетного уведомления.</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменен размер текста в репликах.</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> Улучшено качество бэкграунда в главном меню игры.</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> Улучшено качество фонов в сюжетном режиме.</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменено визуальное оформление уведомления о новом предмете в инвентаре.</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменено визуальное оформление сюжетного уведомления.</li>
+                        <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменены/улучшены/исправлены модельки некоторых персонажей.</li>
+                        <li class="flex gap-2"><span class="text-red-500">[-]</span> Исправлена проблема с некорректным отображением UI-элементов на экране.</li>
+                    </ul>
+                </div>
+                <!-- Конец патчноута -->
+
+                <!-- Добавляй новые патчноуты выше этого комментария -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== РАЗРАБОТЧИКИ ========== -->
+    <section id="team" class="py-20 px-4 bg-neutral-900">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 text-stone-100 tracking-wide">РАЗРАБОТЧИКИ</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- РАЗРАБОТЧИК 1 — твоя карточка -->
+                <div class="bg-neutral-800/50 border border-stone-700 rounded-lg p-8 text-center card-hover">
+                    <div class="w-24 h-24 bg-gradient-to-br from-amber-700 to-orange-900 rounded-lg mx-auto mb-4 flex items-center justify-center overflow-hidden border-2 border-stone-600">
+                        <!-- Замени на своё фото: <img src="фото.jpg" class="w-full h-full object-cover"> -->
+                        <span class="text-3xl">👤</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-stone-100">Михаил Коновалов</h3>
+                    <p class="text-amber-500 mb-4 uppercase tracking-wider text-sm">Геймдизайнер / Разработчик / Сценарист</p>
+                    <p class="text-stone-400 text-sm">Опыт в геймдизайне более 5 лет. Разрабатываю игру с нуля на Unity.</p>
+                    <!-- Ссылки на соцсети -->
+                    <div class="mt-4 flex justify-center gap-4">
+                        <a href="https://t.me/darkosus_OGG" class="text-stone-500 hover:text-amber-500 transition-colors">Telegram</a>
+                    </div>
+                </div>
+
+                <!-- РАЗРАБОТЧИК 2 — Паша -->
+                <div class="bg-neutral-800/50 border border-stone-700 rounded-lg p-8 text-center card-hover">
+                    <div class="w-24 h-24 bg-gradient-to-br from-emerald-700 to-teal-900 rounded-lg mx-auto mb-4 flex items-center justify-center overflow-hidden border-2 border-stone-600">
+                        <!-- Замени на фото Паши: <img src="фото.jpg" class="w-full h-full object-cover"> -->
+                        <span class="text-3xl">🎵</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-stone-100">Павел Гасанов</h3>
+                    <p class="text-emerald-500 mb-4 uppercase tracking-wider text-sm">Композитор / Тестировщик</p>
+                    <p class="text-stone-400 text-sm">Занимается музыкальным сопровождением в игре, которое вы сможете услышать совсем скоро.</p>
+                    <div class="mt-4 flex justify-center gap-4">
+                        <a href="https://t.me/Tot_samyi_ambasador_vansov_OGG" class="text-stone-500 hover:text-emerald-500 transition-colors">Telegram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== БЛАГОДАРНОСТИ ========== -->
+    <section id="thanks" class="py-20 px-4 bg-neutral-950">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4 text-stone-100 tracking-wide">БЛАГОДАРНОСТИ</h2>
+            <p class="text-center text-stone-500 mb-12">Эти люди внесли свой вклад в создание игры</p>
+            
+            <div class="bg-neutral-800/50 border border-stone-700 rounded-lg p-8">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-center">
+                    <!-- Добавляй людей сюда — копируй div -->
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Тестировщики ЗБТ</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Тестирование</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Бывшая команда LongWay Studio</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Фундамент игры</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Сообщество Woolly Bunny</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка / Терпение</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">София Антонова</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Идея</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Алина Топорова</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Арина Терещенкова</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Полина</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Нарративная логика / Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Илья Власов</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Владислав Коновалов</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">София Кочешкова</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Карина Кирсанова</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка</p>
+                    </div>
+                    <div class="p-4 rounded-lg hover:bg-neutral-700/50 transition-colors border border-transparent hover:border-stone-600">
+                        <p class="font-semibold text-stone-200">Антон, Катя и их игровое сообщество</p>
+                        <p class="text-xs text-amber-600 uppercase tracking-wider mt-1">Поддержка / Наставление</p>
+                    </div>
+                    <!-- Добавляй ещё людей -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ФУТЕР ========== -->
+    <footer class="bg-neutral-950 py-12 px-4 border-t border-stone-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-2xl font-bold text-amber-600 font-['Oswald'] tracking-widest mb-4">WOOLLY BUNNY</p>
+            <p class="text-stone-500 mb-4">© 2026 aster. All rights reserved.</p>
+            
+            <!-- Контакты -->
+            <div class="mt-6 flex justify-center gap-6">
+                <a href="https://vk.com/woollybunny" class="text-stone-500 hover:text-amber-500 transition-colors">VK Community</a>
+                <a href="https://t.me/woollybunnycomm" class="text-stone-500 hover:text-amber-500 transition-colors">Telegram Community</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== СКРИПТЫ ========== -->
+    <script>
+        // Мобильное меню
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Закрытие мобильного меню при клике на ссылку
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // ========== ЛАЙТБОКС ==========
+        let currentSlide = 0;
+        const screenshots = document.querySelectorAll('.screenshot-img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCurrent = document.getElementById('lightbox-current');
+        const lightboxTotal = document.getElementById('lightbox-total');
+        
+        // Обновляем счётчик
+        lightboxTotal.textContent = screenshots.length;
+        
+        // Открыть лайтбокс
+        function openLightbox(index) {
+            currentSlide = index;
+            lightboxImg.src = screenshots[index].src;
+            lightboxCurrent.textContent = index + 1;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Блокируем скролл
+        }
+        
+        // Закрыть лайтбокс
+        function closeLightbox(event) {
+            // Закрываем только если кликнули на фон или крестик
+            if (event.target === lightbox || event.target.classList.contains('lightbox-close')) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = ''; // Возвращаем скролл
+            }
+        }
+        
+        // Переключить слайд
+        function changeSlide(direction, event) {
+            event.stopPropagation(); // Не закрываем лайтбокс при клике на стрелки
+            currentSlide += direction;
+            
+            // Зацикливаем
+            if (currentSlide >= screenshots.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = screenshots.length - 1;
+            
+            lightboxImg.src = screenshots[currentSlide].src;
+            lightboxCurrent.textContent = currentSlide + 1;
+        }
+        
+        // Закрытие по Escape и навигация стрелками
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1, e);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1, e);
+            }
+        });
+    </script>
+
+</body>
+</html>

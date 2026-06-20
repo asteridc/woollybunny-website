@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@300;400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Oswald:wght@400;700&family=Tektur:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ========== GRUNGE VARIABLES ========== */
         :root {
@@ -22,32 +22,40 @@
         }
 
         /* ========== BASE RESET & TYPOGRAPHY ========== */
-        * { box-sizing: border-box; }
-        
-        body {
-            background-color: var(--bg-black);
-            color: var(--text-offwhite);
-            font-family: 'Rajdhani', sans-serif; /* Tech/Survival UI style */
-            font-weight: 500;
-            overflow-x: hidden;
-            margin: 0;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
+		* { box-sizing: border-box; }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Bebas Neue', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 0;
-            line-height: 0.9;
-        }
+		body {
+		background-color: var(--bg-black);
+		color: var(--text-offwhite);
+		font-family: 'Tektur', sans-serif; /* Заменено с Rajdhani */
+		font-weight: 500;
+		overflow-x: hidden;
+		margin: 0;
+		line-height: 1.6;
+		font-size: 1.1rem;
+		}
 
-        .font-stencil { font-family: 'Anton', sans-serif; letter-spacing: 2px; }
-        .font-oswald { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
-        .font-hand { font-family: 'Special Elite', cursive; } /* For notes/stamps */
+		h1, h2, h3, h4, h5, h6 {
+		font-family: 'Bebas Neue', sans-serif;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin: 0;
+		line-height: 0.9;
+		}
 
-        /* ========== TEXTURES & FX ========== */
+		.font-stencil {
+		font-family: 'Oswald', sans-serif;
+		letter-spacing: 2px;
+		text-transform: uppercase;
+		font-weight: 700;
+		}
+
+		.font-oswald { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+		.font-hand {
+		font-family: 'Courier Prime', monospace;
+		}  /* For notes/stamps */
+
+		/* ========== TEXTURES & FX ========== */
         /* Film Grain */
         .grain-overlay {
             position: fixed;

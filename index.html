@@ -1130,239 +1130,439 @@
         </div>
     </div>
 
-    <!-- ========== SCRIPTS ========== -->
-    <script>
-        // Data
-        const newsData = [
-            {
-                slug: 'localization-is-now-in-woolly-bunny',
-                badge: 'UPDATE',
-                date: '23.01.2026',
-                title: 'Localization is now in Woolly Bunny!',
-                titleRu: 'Локализация уже в Woolly Bunny!',
-                excerptEn: 'The Woolly Bunny demo has been publicly available for a month now, and today we’re releasing an important update...',
-                excerptRu: 'Демоверсия Woolly Bunny уже месяц находится в открытом доступе, и сегодня мы выпускаем важное обновление...',
-                image: '20260123_205555.jpg',
-                content: `
-                    <div class="lang-en">
-                        <p class="mb-4"><strong class="text-red-500">Hello, survivors!</strong></p>
-                        <p class="mb-4">The <b class="bold">Woolly Bunny</b> demo has been publicly available for a month now, and today we’re releasing an important update.</p>
-                        <p class="mb-4">In <b class="bold">version 0.11</b> we’ve added <b class="bold">English localization</b>. The story mode and UI are now fully available in English. This makes the game accessible not only to the Russian-speaking community, but also to players around the world, and brings Woolly Bunny one step closer to a full global release.</p>
-                        <p class="mb-4">Alongside this, we’re continuing development as planned and gradually improving the visuals, locations, and gameplay elements. Below is the list of changes included in this Friday’s update.</p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">CHANGELOG:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added English localization (story + UI).</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added a Language option to Settings - Russian and English are available (more languages will be added in the future).</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added story chapter icons to Chapter Select.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Replaced the footage used in the substation puzzle.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Improved some locations.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Fixed a screen boundary issue in the substation puzzle.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Other fixes and stability improvements.</li>
-                        </ul>
-                        <p class="mb-4">We’re already working on <b class="bold">the next major update</b>, which will move the game into its next stage of development. Stay tuned - there’s more to come.</p>
-                    </div>
-                    <div class="lang-ru hidden">
-                        <p class="mb-4"><strong class="text-red-500">Салют, выживальщики!</strong></p>
-                        <p class="mb-4">Демоверсия <b class="bold">Woolly Bunny</b> уже месяц находится в открытом доступе, и сегодня мы выпускаем важное обновление.</p>
-                        <p class="mb-4">В <b class="bold">версии 0.11</b> в игру добавлена <b class="bold">английская локализация</b>. Теперь сюжетный режим и интерфейс полностью доступны на английском языке. Это делает игру понятной не только русскоязычному сообществу, но и игрокам из других стран, и приближает Woolly Bunny к полноценному мировому релизу.</p>
-                        <p class="mb-4">Параллельно с этим мы продолжаем плановую разработку проекта и постепенно улучшаем визуал, локации и игровые элементы. Ниже - список изменений в новом пятничном обновлении.</p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">ЧТО ВКЛЮЧЕНО:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена английская локализация (сюжет + интерфейс).</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> В Настройки добавлен параметр «Сменить язык» — доступен русский и английский (в будущем появятся новые языки).</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены иконки глав сюжета в разделе «Выбор главы».</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Заменены футажи в головоломке с подстанцией.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Улучшены некоторые локации.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Исправлена проблема с границами экрана в головоломке с подстанцией.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Прочие исправления и улучшения стабильности.</li>
-                        </ul>
-                        <p class="mb-4">Мы уже работаем над <b class="bold">следующим крупным обновлением</b>, которое продвинет игру на следующий этап развития. Следите за новостями - дальше будет больше.</p>
-                    </div>
-                `
-            },
-            {
-                slug: 'woolly-bunnys-new-future',
-                badge: 'NEWS',
-                date: '02.01.2026',
-                title: "Woolly Bunny's New Future",
-                titleRu: 'Новое будущее Woolly Bunny',
-                excerptEn: 'In this news post, I will share changes to plans for the future of Woolly Bunny.',
-                excerptRu: 'В этом новостном посте я поделюсь изменениями в планах на будущее Woolly Bunny.',
-                image: 'photo_2026-01-01_19-38-54.jpg',
-                content: `
-                    <div class="lang-en">
-                        <p class="mb-4">In our first post of the new year, we have an important announcement to make:</p>
-                        <h4 class="text-red text-xl font-stencil"><strong class="text-red-500">Woolly Bunny will not be released on Steam this spring.</strong></h4>
-                        <p class="mb-4">The original plan was to launch the game's Steam page closer to the middle of the first quarter of 2026 and move towards a release later that year, tentatively in the spring. However, during development, it became clear that this schedule no longer fit the project's needs.
-                        <p class="mb-4">Woolly Bunny is no longer a game that can simply be “finished and released.” The story requires more chapters and more attention to detail. The visuals require a more polished presentation. And the game itself must be of a quality that we consider to be the minimum acceptable standard.
-                        <p class="mb-4">The decision was made: <em class="italic">releasing the game just to meet a deadline is not the path we want to take.</em></p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">The result:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                             <li class="flex gap-2"><span class="text-gray-500">*</span>The creation of the Woolly Bunny page on Steam has been postponed - tentatively to <strong class="text-red-500">May 2026</strong></li>
-                             <li class="flex gap-2"><span class="text-gray-500">*</span>The game's release has been postponed to a later date, tentatively scheduled for <strong class="text-red-500">the end of 2026</strong></li>
-                        </ul>
-                        <p class="mb-4">In the near future, we will focus on getting more feedback and subsequently bringing the game to our own ideal. At the moment, we are working on translating the game into different languages and improving its visual presentation.</p>
-                        <p class="mb-4"><em class="italic"><em class="bold">Stay tuned for updates!</em></em></p>
-                    </div>
-                    <div class="lang-ru hidden">
-                        <p class="mb-4">В первом посту пришедшего года хочу сделать важное заявление:</p>
-                        <h4 class="text-red text-xl font-stencil"><strong class="text-red-500">Woolly Bunny не выйдет в Steam этой весной.</strong></h4>
-                        <p class="mb-4">Изначально планировалось открыть страницу игры в Steam ближе к середине первого квартала 2026 года и двигаться к релизу в том же году, ориентировочно весной. Однако в процессе разработки стало очевидно, что этот график больше не соответствует тому, каким должен быть проект.</p>
-                        <p class="mb-4">Woolly Bunny перестала быть игрой, которую можно просто «довести до релиза». История требует больше глав и больше внимания к деталям. Визуал требует более выверенной подачи. А сама игра должна быть такого уровня качества, который я считаю для себя минимально допустимым.</p>
-                        <p class="mb-4">Было принято решение: <em class="italic">выпускать игру ради сроков - это не тот путь, который я хочу выбрать.</em></p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">В итоге:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                             <li class="flex gap-2"><span class="text-gray-500">*</span>Создание страницы Woolly Bunny в Steam перенесено - ориентировочно на <strong class="text-red-500">май 2026 года</strong></li>
-                             <li class="flex gap-2"><span class="text-gray-500">*</span>Релиз игры переносится на более поздний срок - предварительно на <strong class="text-red-500">конец 2026 года</strong></li>
-                        </ul>
-                        <p class="mb-4">В ближайшем будущем разработка будет сосредоточена на получении большего количества фидбэков. Благодаря этому мы все вместе доведем игру до нашего собственного идеала. На данный момент я работаю над переводом игры на разные языки и улучшением визуальной подачи.</p>
-                        <p class="mb-4"><em class="italic"><em class="bold">Следите за новостями!</em></em></p>
-                    </div>
-                `
-            },
-            {
-                slug: 'v-0-10-1-93',
-                badge: 'BUGFIX',
-                date: '30.12.2025',
-                title: 'v.0.10.1 (93)',
-                titleRu: 'v.0.10.1 (93)',
-                excerptEn: "The first patch for the demo version of Woolly Bunny, fixing bugs and improving the game's visuals.",
-                excerptRu: 'Первый патч для демо-версии Woolly Bunny, исправляющий баги и улучшающий визуальную составляющую игры.',
-                image: '20251230_033059 (2).jpg',
-                content: `
-                    <div class="lang-en">
-                        <p class="mb-4">Happy New Year, community!</p>
-                        <p class="mb-4">We are pleased to present the first patch for the demo version of <strong class="text-red-500">Woolly Bunny</strong>. In this update, we focused on fixing bugs and improving the visual component of the game to make your experience even better.</p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">CHANGELOG:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> The New Year's menu has been added.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> An icon has been added to the standard story notification.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Some backgrounds in the game have been changed.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Other minor fixes.</li>
-                        </ul>
-                    </div>
-                    <div class="lang-ru hidden">
-                        <p class="mb-4">С Новым годом, сообщество!</p>
-                        <p class="mb-4">Мы рады представить первый патч для демо-версии <strong class="text-red-500">Woolly Bunny</strong>. В этом обновлении мы сосредоточились на исправлении багов и улучшении визуальной составляющей игры, чтобы сделать ваш опыт ещё лучше.</p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">ЧТО ВКЛЮЧЕНО:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлено новогоднее меню.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена иконка к обычному сюжетному уведомлению.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменены некоторые фоны в игре.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Другие мелкие исправления.</li>
-                        </ul>
-                    </div>
-                `
-            },
-            {
-                slug: 'demo-has-been-released',
-                badge: 'RELEASE',
-                date: '23.12.2025',
-                title: 'DEMO HAS BEEN RELEASED',
-                titleRu: 'ДЕМОВЕРСИЯ ВЫШЛА В СВЕТ',
-                excerptEn: 'The demo version of Woolly Bunny is now available for download!',
-                excerptRu: 'Демоверсия Woolly Bunny теперь доступна для скачивания!',
-                image: '20251223_192853.jpg',
-                content: `
-                    <div class="lang-en">
-                        <p class="mb-4">We are glad to finally present <strong class="text-red-500">Woolly Bunny</strong> — our dream project in the post-apocalyptic visual novel genre.</p>
-                        <p class="mb-4">We have been working on this project for several months and are ready to share the initial results with you.</p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">CHANGELOG:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                            <h5 class="text-xl font-bold text-stone-100">Main changes</h5>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Public release of the demo version.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Chapter 1, “The World” (Prologue), and Chapter 2, “Elysium”, are available. Some mechanics have been removed from the demo version.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added the ability to save story progress.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added a working Pause menu. Now you can press the “Esc” button at any time to pause the game.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added “Settings”.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added sound effects and volume control (there is no sound in the game yet).</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Added more variability to the storyline.</li>
-                            <h5 class="text-xl font-bold text-stone-100">Fixes and improvements</h5>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> An icon has been added next to the name when characters speak on the radio.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added animation for text appearance in dialogue.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added smooth transitions when switching between listener and speaker roles, as well as when changing models.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added animation for the appearance of the dialog box.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added animation for the appearance of a notification about a new item in the inventory.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Added animation for the appearance of a story notification.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Changed the text size in dialogue.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Improved the quality of the background in the game's main menu.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Improved the quality of backgrounds in story mode.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Changed the visual design of the notification about a new item in the inventory.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Changed the visual design of the story notification.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Changed/improved/fixed the models of some characters.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Fixed an issue with incorrect display of UI elements on the screen.</li>
-                        </ul>
-                    </div>
-                    <div class="lang-ru hidden">
-                        <p class="mb-4">Рады наконец представить <strong class="text-red-500">Woolly Bunny</strong> — наш проект мечты в жанре постапокалиптической визуальной новеллы.</p>
-                        <p class="mb-4">Мы работаем над этим проектом уже несколько месяцев и готовы поделиться первыми результатами с вами.</p>
-                        <h4 class="text-white text-xl font-stencil mt-8 mb-4">ЧТО ВКЛЮЧЕНО:</h4>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
-                            <h5 class="text-xl font-bold text-stone-100">Основные изменения</h5>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Публичный релиз демо-версии.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Доступны 1-я глава «Мир» (Пролог) и 2-я глава «Элизиум». В рамках демоверсии некоторые механики из них вырезаны.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена возможность сохранения сюжетного прогресса.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлено рабочее меню Паузы. Теперь можно в любой момент нажать кнопку «Esc» и приостановить игру.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены «Настройки».</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены звуковые эффекты и настройка их громкости (самого звука в игре пока нет).</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> В сюжете стало больше вариативности.</li>
-                            <h5 class="text-xl font-bold text-stone-100">Исправления и улучшения</h5>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена иконка около имени в тех моментах, где персонажи говорят по рации.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления текста в репликах.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлены плавные переходы в смене роли слушающего и говорящего, а также в смене моделек.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления диалогового окна.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления уведомления о новом предмете в инвентаре.</li>
-                            <li class="flex gap-2"><span class="text-emerald-500">[+]</span> Добавлена анимация появления сюжетного уведомления.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменен размер текста в репликах.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Улучшено качество бэкграунда в главном меню игры.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Улучшено качество фонов в сюжетном режиме.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменено визуальное оформление уведомления о новом предмете в инвентаре.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменено визуальное оформление сюжетного уведомления.</li>
-                            <li class="flex gap-2"><span class="text-amber-500">[~]</span> Изменены/улучшены/исправлены модельки некоторых персонажей.</li>
-                            <li class="flex gap-2"><span class="text-red-500">[-]</span> Исправлена проблема с некорректным отображением UI-элементов на экране.</li>
-                        </ul>
-                    </div>
-                `
-            }
-        ];
+	<!-- ========== SCRIPTS ========== -->
+	<script>
+		// Data
+		const newsData = [
+		{
+		slug: 'the-new-vision-is-coming-soon',
+		badge: 'NEWS',
+		date: '20.06.2026',
+		title: 'City, get ready: The New Vision is coming soon',
+		titleRu: 'Город, встречай: The New Vision уже близко',
+		excerptEn: 'Dear players, an update to the demo version of “The New Vision” is on its way. Get ready to take a look at...',
+		excerptRu: 'Дорогие игроки, обновление демоверсии "The New Vision" уже на подходе. Готовьтесь взглянуть на...',
+		image: 'photo_2026-06-20_19-42-24.jpg',
+		content: `
+		<div class="lang-en">
+			<p class="mb-4">
+				<strong class="text-red-500">Dear players,</strong>
+			</p>
+			<p class="mb-4">
+				An update to the demo version of <b class="bold">The New Vision</b> is coming soon. Get ready to see Woolly Bunny in a whole new light. Stay tuned for updates on our Telegram channel and website.
+			</p>
+		</div>
+		<div class="lang-ru hidden">
+			<p class="mb-4">
+				<strong class="text-red-500">Дорогие игроки,</strong>
+			</p>
+			<p class="mb-4">
+				обновление демоверсии <b class="bold">The New Vision</b> уже на подходе. Готовьтесь взглянуть на Woolly Bunny по-новому. Следите за новостями в телеграм-канале и на сайте.
+			</p>
+		</div>
+		`
+		},
+		{
+		slug: 'localization-is-now-in-woolly-bunny',
+		badge: 'UPDATE',
+		date: '23.01.2026',
+		title: 'Localization is now in Woolly Bunny!',
+		titleRu: 'Локализация уже в Woolly Bunny!',
+		excerptEn: 'The Woolly Bunny demo has been publicly available for a month now, and today we’re releasing an important update...',
+		excerptRu: 'Демоверсия Woolly Bunny уже месяц находится в открытом доступе, и сегодня мы выпускаем важное обновление...',
+		image: '20260123_205555.jpg',
+		content: `
+		<div class="lang-en">
+			<p class="mb-4">
+				<strong class="text-red-500">Hello, survivors!</strong>
+			</p>
+			<p class="mb-4">
+				The <b class="bold">Woolly Bunny</b> demo has been publicly available for a month now, and today we’re releasing an important update.
+			</p>
+			<p class="mb-4">
+				In <b class="bold">version 0.11</b> we’ve added <b class="bold">English localization</b>. The story mode and UI are now fully available in English. This makes the game accessible not only to the Russian-speaking community, but also to players around the world, and brings Woolly Bunny one step closer to a full global release.
+			</p>
+			<p class="mb-4">Alongside this, we’re continuing development as planned and gradually improving the visuals, locations, and gameplay elements. Below is the list of changes included in this Friday’s update.</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">CHANGELOG:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added English localization (story + UI).
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added a Language option to Settings - Russian and English are available (more languages will be added in the future).
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added story chapter icons to Chapter Select.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Replaced the footage used in the substation puzzle.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Improved some locations.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Fixed a screen boundary issue in the substation puzzle.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Other fixes and stability improvements.
+				</li>
+			</ul>
+			<p class="mb-4">
+				We’re already working on <b class="bold">the next major update</b>, which will move the game into its next stage of development. Stay tuned - there’s more to come.
+			</p>
+		</div>
+		<div class="lang-ru hidden">
+			<p class="mb-4">
+				<strong class="text-red-500">Салют, выживальщики!</strong>
+			</p>
+			<p class="mb-4">
+				Демоверсия <b class="bold">Woolly Bunny</b> уже месяц находится в открытом доступе, и сегодня мы выпускаем важное обновление.
+			</p>
+			<p class="mb-4">
+				В <b class="bold">версии 0.11</b> в игру добавлена <b class="bold">английская локализация</b>. Теперь сюжетный режим и интерфейс полностью доступны на английском языке. Это делает игру понятной не только русскоязычному сообществу, но и игрокам из других стран, и приближает Woolly Bunny к полноценному мировому релизу.
+			</p>
+			<p class="mb-4">Параллельно с этим мы продолжаем плановую разработку проекта и постепенно улучшаем визуал, локации и игровые элементы. Ниже - список изменений в новом пятничном обновлении.</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">ЧТО ВКЛЮЧЕНО:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена английская локализация (сюжет + интерфейс).
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> В Настройки добавлен параметр «Сменить язык» — доступен русский и английский (в будущем появятся новые языки).
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлены иконки глав сюжета в разделе «Выбор главы».
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Заменены футажи в головоломке с подстанцией.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Улучшены некоторые локации.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Исправлена проблема с границами экрана в головоломке с подстанцией.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Прочие исправления и улучшения стабильности.
+				</li>
+			</ul>
+			<p class="mb-4">
+				Мы уже работаем над <b class="bold">следующим крупным обновлением</b>, которое продвинет игру на следующий этап развития. Следите за новостями - дальше будет больше.
+			</p>
+		</div>
+		`
+		},
+		{
+		slug: 'woolly-bunnys-new-future',
+		badge: 'NEWS',
+		date: '02.01.2026',
+		title: "Woolly Bunny's New Future",
+		titleRu: 'Новое будущее Woolly Bunny',
+		excerptEn: 'In this news post, I will share changes to plans for the future of Woolly Bunny.',
+		excerptRu: 'В этом новостном посте я поделюсь изменениями в планах на будущее Woolly Bunny.',
+		image: 'photo_2026-01-01_19-38-54.jpg',
+		content: `
+		<div class="lang-en">
+			<p class="mb-4">In our first post of the new year, we have an important announcement to make:</p>
+			<h4 class="text-red text-xl font-stencil">
+				<strong class="text-red-500">Woolly Bunny will not be released on Steam this spring.</strong>
+			</h4>
+			<p class="mb-4">
+				The original plan was to launch the game's Steam page closer to the middle of the first quarter of 2026 and move towards a release later that year, tentatively in the spring. However, during development, it became clear that this schedule no longer fit the project's needs.<p class="mb-4">
+					Woolly Bunny is no longer a game that can simply be “finished and released.” The story requires more chapters and more attention to detail. The visuals require a more polished presentation. And the game itself must be of a quality that we consider to be the minimum acceptable standard.
+					<p class="mb-4">
+						The decision was made: <em class="italic">releasing the game just to meet a deadline is not the path we want to take.</em>
+					</p>
+					<h4 class="text-white text-xl font-stencil mt-8 mb-4">The result:</h4>
+					<ul class="list-disc list-inside space-y-2 text-gray-400 text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+						<li class="flex gap-2">
+							<span class="text-gray-500">*</span>The creation of the Woolly Bunny page on Steam has been postponed - tentatively to <strong class="text-red-500">May 2026</strong>
+						</li>
+						<li class="flex gap-2">
+							<span class="text-gray-500">*</span>The game's release has been postponed to a later date, tentatively scheduled for <strong class="text-red-500">the end of 2026</strong>
+						</li>
+					</ul>
+					<p class="mb-4">In the near future, we will focus on getting more feedback and subsequently bringing the game to our own ideal. At the moment, we are working on translating the game into different languages and improving its visual presentation.</p>
+					<p class="mb-4">
+						<em class="italic">
+							<em class="bold">Stay tuned for updates!</em>
+						</em>
+					</p>
+				</div>
+		<div class="lang-ru hidden">
+			<p class="mb-4">В первом посту пришедшего года хочу сделать важное заявление:</p>
+			<h4 class="text-red text-xl font-stencil">
+				<strong class="text-red-500">Woolly Bunny не выйдет в Steam этой весной.</strong>
+			</h4>
+			<p class="mb-4">Изначально планировалось открыть страницу игры в Steam ближе к середине первого квартала 2026 года и двигаться к релизу в том же году, ориентировочно весной. Однако в процессе разработки стало очевидно, что этот график больше не соответствует тому, каким должен быть проект.</p>
+			<p class="mb-4">Woolly Bunny перестала быть игрой, которую можно просто «довести до релиза». История требует больше глав и больше внимания к деталям. Визуал требует более выверенной подачи. А сама игра должна быть такого уровня качества, который я считаю для себя минимально допустимым.</p>
+			<p class="mb-4">
+				Было принято решение: <em class="italic">выпускать игру ради сроков - это не тот путь, который я хочу выбрать.</em>
+			</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">В итоге:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<li class="flex gap-2">
+					<span class="text-gray-500">*</span>Создание страницы Woolly Bunny в Steam перенесено - ориентировочно на <strong class="text-red-500">май 2026 года</strong>
+				</li>
+				<li class="flex gap-2">
+					<span class="text-gray-500">*</span>Релиз игры переносится на более поздний срок - предварительно на <strong class="text-red-500">конец 2026 года</strong>
+				</li>
+			</ul>
+			<p class="mb-4">В ближайшем будущем разработка будет сосредоточена на получении большего количества фидбэков. Благодаря этому мы все вместе доведем игру до нашего собственного идеала. На данный момент я работаю над переводом игры на разные языки и улучшением визуальной подачи.</p>
+			<p class="mb-4">
+				<em class="italic">
+					<em class="bold">Следите за новостями!</em>
+				</em>
+			</p>
+		</div>
+		`
+		},
+		{
+		slug: 'v-0-10-1-93',
+		badge: 'BUGFIX',
+		date: '30.12.2025',
+		title: 'v.0.10.1 (93)',
+		titleRu: 'v.0.10.1 (93)',excerptEn: "The first patch for the demo version of Woolly Bunny, fixing bugs and improving the game's visuals.",
+		excerptRu: 'Первый патч для демо-версии Woolly Bunny, исправляющий баги и улучшающий визуальную составляющую игры.',
+		image: '20251230_033059 (2).jpg',
+		content: `
+		<div class="lang-en">
+			<p class="mb-4">Happy New Year, community!</p>
+			<p class="mb-4">
+				We are pleased to present the first patch for the demo version of <strong class="text-red-500">Woolly Bunny</strong>. In this update, we focused on fixing bugs and improving the visual component of the game to make your experience even better.
+			</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">CHANGELOG:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> The New Year's menu has been added.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> An icon has been added to the standard story notification.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Some backgrounds in the game have been changed.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Other minor fixes.
+				</li>
+			</ul>
+		</div>
+		<div class="lang-ru hidden">
+			<p class="mb-4">С Новым годом, сообщество!</p>
+			<p class="mb-4">
+				Мы рады представить первый патч для демо-версии <strong class="text-red-500">Woolly Bunny</strong>. В этом обновлении мы сосредоточились на исправлении багов и улучшении визуальной составляющей игры, чтобы сделать ваш опыт ещё лучше.
+			</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">ЧТО ВКЛЮЧЕНО:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлено новогоднее меню.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена иконка к обычному сюжетному уведомлению.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Изменены некоторые фоны в игре.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Другие мелкие исправления.
+				</li>
+			</ul>
+		</div>
+		`
+		},
+		{
+		slug: 'demo-has-been-released',
+		badge: 'RELEASE',
+		date: '23.12.2025',
+		title: 'DEMO HAS BEEN RELEASED',
+		titleRu: 'ДЕМОВЕРСИЯ ВЫШЛА В СВЕТ',
+		excerptEn: 'The demo version of Woolly Bunny is now available for download!',
+		excerptRu: 'Демоверсия Woolly Bunny теперь доступна для скачивания!',
+		image: '20251223_192853.jpg',
+		content: `
+		<div class="lang-en">
+			<p class="mb-4">
+				We are glad to finally present <strong class="text-red-500">Woolly Bunny</strong> — our dream project in the post-apocalyptic visual novel genre.
+			</p>
+			<p class="mb-4">We have been working on this project for several months and are ready to share the initial results with you.</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">CHANGELOG:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<h5 class="text-xl font-bold text-stone-100">Main changes</h5>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Public release of the demo version.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Chapter 1, “The World” (Prologue), and Chapter 2, “Elysium”, are available. Some mechanics have been removed from the demo version.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added the ability to save story progress.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added a working Pause menu. Now you can press the “Esc” button at any time to pause the game.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added “Settings”.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added sound effects and volume control (there is no sound in the game yet).
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Added more variability to the storyline.
+				</li>
+				<h5 class="text-xl font-bold text-stone-100">Fixes and improvements</h5>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> An icon has been added next to the name when characters speak on the radio.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added animation for text appearance in dialogue.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added smooth transitions when switching between listener and speaker roles, as well as when changing models.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added animation for the appearance of the dialog box.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added animation for the appearance of a notification about a new item in the inventory.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Added animation for the appearance of a story notification.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Changed the text size in dialogue.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Improved the quality of the background in the game's main menu.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Improved the quality of backgrounds in story mode.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Changed the visual design of the notification about a new item in the inventory.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Changed the visual design of the story notification.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Changed/improved/fixed the models of some characters.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Fixed an issue with incorrect display of UI elements on the screen.
+				</li>
+			</ul>
+		</div>
+		<div class="lang-ru hidden">
+			<p class="mb-4">
+				Рады наконец представить <strong class="text-red-500">Woolly Bunny</strong> — наш проект мечты в жанре постапокалиптической визуальной новеллы.
+			</p>
+			<p class="mb-4">Мы работаем над этим проектом уже несколько месяцев и готовы поделиться первыми результатами с вами.</p>
+			<h4 class="text-white text-xl font-stencil mt-8 mb-4">ЧТО ВКЛЮЧЕНО:</h4>
+			<ul class="list-disc list-inside space-y-2 text-gray-400 font-mono text-sm border-l-2 border-red-800 pl-4 bg-black/20 py-4">
+				<h5 class="text-xl font-bold text-stone-100">Основные изменения</h5>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Публичный релиз демо-версии.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Доступны 1-я глава «Мир» (Пролог) и 2-я глава «Элизиум». В рамках демоверсии некоторые механики из них вырезаны.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена возможность сохранения сюжетного прогресса.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлено рабочее меню Паузы. Теперь можно в любой момент нажать кнопку «Esc» и приостановить игру.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлены «Настройки».
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлены звуковые эффекты и настройка их громкости (самого звука в игре пока нет).
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> В сюжете стало больше вариативности.
+				</li>
+				<h5 class="text-xl font-bold text-stone-100">Исправления и улучшения</h5>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена иконка около имени в тех моментах, где персонажи говорят по рации.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена анимация появления текста в репликах.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлены плавные переходы в смене роли слушающего и говорящего, а также в смене моделек.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена анимация появления диалогового окна.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена анимация появления уведомления о новом предмете в инвентаре.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-emerald-500">[+]</span> Добавлена анимация появления сюжетного уведомления.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Изменен размер текста в репликах.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Улучшено качество бэкграунда в главном меню игры.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Улучшено качество фонов в сюжетном режиме.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Изменено визуальное оформление уведомления о новом предмете в инвентаре.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Изменено визуальное оформление сюжетного уведомления.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-amber-500">[~]</span> Изменены/улучшены/исправлены модельки некоторых персонажей.
+				</li>
+				<li class="flex gap-2">
+					<span class="text-red-500">[-]</span> Исправлена проблема с некорректным отображением UI-элементов на экране.
+				</li>
+			</ul>
+		</div>
+		`
+		}
+		];
 
-        const screenshots = [
-            'image_2025-12-21_02-21-36.png',
-            'image_2025-12-21_02-22-07.png',
-            'image_2025-12-21_02-22-40.png',
-            'image_2025-12-21_02-23-20.png',
-            'image_2025-12-21_02-23-58.png',
-            'image_2025-12-16_23-23-25.png'
-        ];
+		const screenshots = [
+		'image_2025-12-21_02-21-36.png',
+		'image_2025-12-21_02-22-07.png',
+		'image_2025-12-21_02-22-40.png',
+		'image_2025-12-21_02-23-20.png',
+		'image_2025-12-21_02-23-58.png',
+		'image_2025-12-16_23-23-25.png'
+		];
 
-        // Mobile Menu
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        });
+		// Mobile Menu
+		document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+		document.getElementById('mobileMenu').classList.toggle('hidden');
+		});
 
-        // News Modal Logic
-        const newsModal = document.getElementById('newsModal');
-        const newsList = document.getElementById('newsList');
-        const newsPagination = document.getElementById('newsPagination');
-        const newsSection = document.getElementById('news');
-        const NEWS_ITEMS_PER_PAGE = 4;
-        const modalElements = {
-            badge: document.getElementById('modal-badge'),
-            date: document.getElementById('modal-date'),
-            title: document.getElementById('modal-title'),
-            content: document.getElementById('modal-content'),
-            image: document.getElementById('modal-image'),
-            copyLabel: document.getElementById('modal-copy-label'),
-            copiedLabel: document.getElementById('modal-copied-label')
-        };
-        
-        let currentLanguage = 'en';
-        let currentNewsPage = 1;
-        let currentNewsIndex = null;
-        let copyFeedbackTimer = null;
+		// News Modal Logic
+		const newsModal = document.getElementById('newsModal');
+		const newsList = document.getElementById('newsList');
+		const newsPagination = document.getElementById('newsPagination');
+		const newsSection = document.getElementById('news');
+		const NEWS_ITEMS_PER_PAGE = 4;
+		const modalElements = {
+		badge: document.getElementById('modal-badge'),
+		date: document.getElementById('modal-date'),
+		title: document.getElementById('modal-title'),
+		content: document.getElementById('modal-content'),
+		image: document.getElementById('modal-image'),
+		copyLabel: document.getElementById('modal-copy-label'),
+		copiedLabel: document.getElementById('modal-copied-label')
+		};
 
-        function escapeHtml(value) {
-            return String(value).replace(/[&<>"']/g, (char) => ({
+		let currentLanguage = 'en';
+		let currentNewsPage = 1;
+		let currentNewsIndex = null;
+		let copyFeedbackTimer = null;
+
+		function escapeHtml(value) {
+		return String(value).replace(/[&<>"']/g, (char) => ({
                 '&': '&amp;',
                 '<': '&lt;',
                 '>': '&gt;',

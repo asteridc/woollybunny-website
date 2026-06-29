@@ -1940,6 +1940,9 @@
         function setLang(lang) {
             currentLanguage = lang;
             
+            // СОХРАНЯЕМ ВЫБОР ПОЛЬЗОВАТЕЛЯ В ПАМЯТЬ БРАУЗЕРА
+            localStorage.setItem('woollyBunnyLang', lang);
+            
             // Toggle Content Visibility
             document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
             document.querySelectorAll('.lang-ru').forEach(el => el.classList.toggle('hidden', lang !== 'ru'));
@@ -1952,10 +1955,23 @@
             const menu = document.getElementById('langMenu');
             if(menu) menu.classList.add('hidden');
         }
+		
+		function getInitialLanguage() {
+            const savedLang = localStorage.getItem('woollyBunnyLang');
+            if (savedLang) return savedLang;
+
+            const browserLang = navigator.language || navigator.userLanguage;
+            if (browserLang.toLowerCase().startsWith('ru')) {
+                return 'ru';
+            }
+
+            return 'en'; 
+        }
         
-        // Initialize Default (EN)
+// Initialize Default
+        const startLang = getInitialLanguage();
         renderNewsPage(getInitialNewsPage());
-        setLang('en');
+        setLang(startLang);
         handleNewsRoute();
         window.addEventListener('hashchange', handleNewsRoute);
     </script>

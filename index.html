@@ -1121,6 +1121,12 @@
 					<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 font-mono">Ссылка на изображение (Обложка)</label>
 					<input type="text" id="newsImgUrl" placeholder="https://site.com/image.jpg или локальный путь" class="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 rounded focus:outline-none focus:border-amber-500 text-sm">
         </div>
+				
+				<div class="mb-4">
+					<label class="block text-xs font-mono text-gray-400 mb-1 uppercase tracking-wider">Ссылка новости (URL Slug / Постфикс)</label>
+					<input type="text" id="newsSlug" class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-amber-500" placeholder="пример-названия-новости">
+						<p class="text-[10px] text-zinc-500 font-mono mt-1">Генерируется автоматически из английского названия, но вы можете изменить его вручную (только латиница, цифры и дефисы).</p>
+					</div>
 
 				<!-- Редактор на двух языках (Две колонки) -->
 				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1139,9 +1145,14 @@
 								<button type="button" onclick="insertTag('newsContentRu', 'b')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded font-bold cursor-pointer" title="Жирный">B</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'i')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded italic cursor-pointer" title="Курсив">I</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'blockquote')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Цитата">“ Цитата</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'h1')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H1</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'h2')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H2</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'h3')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H3</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'ul')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Маркированный список">• Список</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'ol')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Нумерованный список">1. Список</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold" title="Сделать текст красным">Красный текст</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'green')" class="px-2 py-0.5 bg-green-950/50 border border-green-800 text-green-400 hover:bg-green-900 rounded text-xs font-mono">Зеленый</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'amber')" class="px-2 py-0.5 bg-amber-950/50 border border-amber-800 text-amber-400 hover:bg-amber-900 rounded text-xs font-mono">Янтарный</button>
 							</div>
 							<textarea id="newsContentRu" rows="10" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-b focus:outline-none focus:border-amber-500 font-sans text-sm resize-y" placeholder="Напишите текст... Используйте инструменты выше для форматирования выделенного фрагмента."></textarea>
 						</div>
@@ -1161,9 +1172,14 @@
 								<button type="button" onclick="insertTag('newsContentEn', 'b')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded font-bold cursor-pointer">B</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'i')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded italic cursor-pointer">I</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'blockquote')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">“ Quote</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'h1')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H1</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'h2')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H2</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'h3')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H3</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'ul')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">• List</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'ol')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">1. List</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold">Red Text</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'green')" class="px-2 py-0.5 bg-green-950/50 border border-green-800 text-green-400 hover:bg-green-900 rounded text-xs font-mono">Green</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'amber')" class="px-2 py-0.5 bg-amber-950/50 border border-amber-800 text-amber-400 hover:bg-amber-900 rounded text-xs font-mono">Amber</button>
 							</div>
 							<textarea id="newsContentEn" rows="10" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-b focus:outline-none focus:border-amber-500 font-sans text-sm resize-y" placeholder="Write content... Use tools above to format selection."></textarea>
 						</div>
@@ -1173,7 +1189,9 @@
 
 				<!-- Кнопки управления -->
 				<div class="flex justify-end gap-3 border-t border-zinc-800 pt-4 mt-6">
-					<button onclick="closeEditorModal()" class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer font-mono">Отмена</button>
+					<button type="button" onclick="closeEditorModal()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded font-mono text-sm cursor-pointer">
+						Отмена
+					</button>
 					<button onclick="saveNews()" class="px-5 py-2 text-sm bg-amber-600 hover:bg-amber-500 text-black font-bold rounded transition-colors cursor-pointer font-mono uppercase tracking-wide">Сохранить новость</button>
 				</div>
 			</div>
@@ -2112,6 +2130,16 @@ function insertTag(textareaId, tag) {
     let replacement = "";
     if (tag === 'red') {
         replacement = `<span class="text-red-500 font-semibold">${selectedText || 'красный текст'}</span>`;
+    } else if (tag === 'green') {
+        replacement = `<span class="text-green-500 font-semibold">${selectedText || 'зеленый текст'}</span>`;
+    } else if (tag === 'amber') {
+        replacement = `<span class="text-amber-500 font-semibold">${selectedText || 'янтарный текст'}</span>`;
+    } else if (tag === 'h1') {
+        replacement = `\n<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">${selectedText || 'Заголовок 1'}</h1>\n`;
+    } else if (tag === 'h2') {
+        replacement = `\n<h2 class="text-xl font-bold text-zinc-200 mt-4 mb-2">${selectedText || 'Заголовок 2'}</h2>\n`;
+    } else if (tag === 'h3') {
+        replacement = `\n<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">${selectedText || 'Заголовок 3'}</h3>\n`;
     } else if (tag === 'ul') {
         replacement = `\n<ul class="list-disc pl-5 my-2 space-y-1">\n  <li>${selectedText || 'Пункт списка'}</li>\n</ul>\n`;
     } else if (tag === 'ol') {
@@ -2128,6 +2156,31 @@ function insertTag(textareaId, tag) {
 }
 
 // Окна редактора
+
+function slugify(text) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')           // Заменяет пробелы на дефисы
+        .replace(/[^\w\-]+/g, '')       // Удаляет все спецсимволы, кроме латиницы, цифр и дефисов
+        .replace(/\-\-+/g, '-');        // Схлопывает множественные дефисы в один
+}
+
+// Привязываем автозаполнение слага к английскому заголовку при первой загрузке скрипта
+document.addEventListener("DOMContentLoaded", () => {
+    const titleEnInput = document.getElementById('newsTitleEn');
+    if (titleEnInput) {
+        titleEnInput.addEventListener('input', (e) => {
+            const isEditing = document.getElementById('editNewsId').value;
+            // Автозаполнение работает только при создании новой новости, чтобы не ломать старые ссылки при редактировании
+            if (!isEditing) {
+                document.getElementById('newsSlug').value = slugify(e.target.value);
+            }
+        });
+    }
+});
+
 function openEditorModal(newsId = '') {
     const modal = document.getElementById('editorModal');
     document.getElementById('editNewsId').value = newsId;
@@ -2138,6 +2191,7 @@ function openEditorModal(newsId = '') {
         const item = customNews.find(n => n.id === newsId);
         if (item) {
             document.getElementById('newsImgUrl').value = item.image || '';
+            document.getElementById('newsSlug').value = item.slug || item.id; // Загружаем текущий слаг
             document.getElementById('newsTitleRu').value = item.title.ru || '';
             document.getElementById('newsContentRu').value = item.content.ru || '';
             document.getElementById('newsTitleEn').value = item.title.en || '';
@@ -2146,6 +2200,7 @@ function openEditorModal(newsId = '') {
     } else {
         document.getElementById('editorModalTitle').innerText = "Создание новости";
         document.getElementById('newsImgUrl').value = '';
+        document.getElementById('newsSlug').value = '';
         document.getElementById('newsTitleRu').value = '';
         document.getElementById('newsContentRu').value = '';
         document.getElementById('newsTitleEn').value = '';
@@ -2154,9 +2209,7 @@ function openEditorModal(newsId = '') {
     modal.classList.remove('hidden');
 }
 
-function closeEditorModal() { document.getElementById('editorModal').classList.add('hidden'); }
 
-// Сохранение новости
 function saveNews() {
     const id = document.getElementById('editNewsId').value;
     const image = document.getElementById('newsImgUrl').value || 'https://via.placeholder.com/800x450';
@@ -2165,24 +2218,42 @@ function saveNews() {
     const titleEn = document.getElementById('newsTitleEn').value;
     const contentEn = document.getElementById('newsContentEn').value;
     
+    // Фильтруем кастомный слаг пользователя на случай пробелов или спецсимволов
+    let slug = slugify(document.getElementById('newsSlug').value);
+    
     if (!titleRu || !contentRu || !titleEn || !contentEn) {
         alert('Заполните заголовки и текст для обеих версий языков!');
         return;
+    }
+    
+    if (!slug) {
+        slug = slugify(titleEn) || 'news-' + Date.now();
     }
     
     let customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
     const today = new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.');
 
     if (id) {
+        // При редактировании проверяем, не занят ли новый слаг другой новостью
+        if (id !== slug && customNews.some(item => item.slug === slug)) {
+            alert('Ошибка: Новость с таким URL-постфиксом уже существует. Придумайте другой!');
+            return;
+        }
         customNews = customNews.map(item => {
             if (item.id === id) {
-                return { ...item, image, title: { ru: titleRu, en: titleEn }, content: { ru: contentRu, en: contentEn } };
+                return { ...item, image, slug, id: slug, title: { ru: titleRu, en: titleEn }, content: { ru: contentRu, en: contentEn } };
             }
             return item;
         });
     } else {
+        // При создании новой проверяем уникальность ссылки
+        if (customNews.some(item => item.slug === slug)) {
+            alert('Ошибка: Новость с таким URL-постфиксом уже существует. Измените поле ссылки!');
+            return;
+        }
         const newPost = {
-            id: 'news-' + Date.now(),
+            id: slug, // Теперь ID совпадает со слагом для бесшовного роутинга
+            slug: slug,
             date: today,
             image: image,
             title: { ru: titleRu, en: titleEn },
@@ -2270,6 +2341,10 @@ renderNewsCard = function(data, index) {
     }
     return cardHtml;
 };
+
+function closeEditorModal() { 
+    document.getElementById('editorModal').classList.add('hidden'); 
+}
 		
 // Initialize Default
         const startLang = getInitialLanguage();

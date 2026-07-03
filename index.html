@@ -1085,11 +1085,99 @@
                 <p>
                     <span class="lang-en">&copy; 2026 aster. All rights reserved.</span>
                     <span class="lang-ru hidden">&copy; 2026 aster. All rights reserved.</span>
+					<button id="adminLoginBtn" onclick="openAdminModal()" class="ml-2 text-zinc-600 hover:text-amber-500 transition-colors text-xs underline cursor-pointer font-mono">
+						Войти как админ
+					</button>
+					<button id="adminLogoutBtn" onclick="logoutAdmin()" class="hidden ml-2 text-red-500 hover:text-red-400 transition-colors text-xs underline cursor-pointer font-mono">
+						Выйти из админки
+					</button>
                 </p>
                 <p class="mt-2">SYS_STATUS: <span class="text-red-900">ACTIVE</span></p>
             </div>
         </div>
     </footer>
+
+	<!-- ========== MODAL: ADMIN AUTH ========== -->
+	<div id="authModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+		<div class="bg-zinc-950 border border-zinc-800 p-6 rounded-lg max-w-sm w-full shadow-2xl shadow-black">
+			<h3 class="text-xl font-bold text-amber-500 mb-4 font-mono uppercase tracking-wider">Доступ к терминалу</h3>
+			<input type="password" id="adminPasswordInput" placeholder="Введите пароль..." class="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 rounded mb-4 focus:outline-none focus:border-amber-500 font-mono text-sm">
+				<div class="flex justify-end gap-2">
+					<button onclick="closeAdminModal()" class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer font-mono">Отмена</button>
+					<button onclick="checkAdminPassword()" class="px-4 py-2 text-sm bg-amber-600 hover:bg-amber-500 text-black font-bold rounded transition-colors cursor-pointer font-mono uppercase">Войти</button>
+				</div>
+			</div>
+	</div>
+
+	<!-- ========== MODAL: NEWS EDITOR ========== -->
+	<div id="editorModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+		<div class="bg-zinc-950 border border-zinc-800 p-6 rounded-lg max-w-4xl w-full shadow-2xl shadow-black my-8">
+			<h3 id="editorModalTitle" class="text-2xl font-bold text-amber-500 mb-6 font-mono uppercase tracking-wider border-b border-zinc-800 pb-3">Создание новости</h3>
+
+			<input type="hidden" id="editNewsId">
+
+				<!-- Ссылка на обложку -->
+				<div class="mb-6">
+					<label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 font-mono">Ссылка на изображение (Обложка)</label>
+					<input type="text" id="newsImgUrl" placeholder="https://site.com/image.jpg или локальный путь" class="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 rounded focus:outline-none focus:border-amber-500 text-sm">
+        </div>
+
+				<!-- Редактор на двух языках (Две колонки) -->
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+					<!-- РУССКАЯ ВЕРСИЯ -->
+					<div class="border border-zinc-800 p-4 rounded bg-zinc-900/30">
+						<span class="inline-block text-xs font-bold bg-amber-500/10 text-amber-400 px-2 py-1 rounded mb-4 font-mono border border-amber-500/20">РУССКАЯ ВЕРСИЯ</span>
+						<div class="mb-4">
+							<label class="block text-xs text-gray-400 mb-1 font-mono">Заголовок новости</label>
+							<input type="text" id="newsTitleRu" class="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 rounded focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+						<div class="mb-4">
+							<label class="block text-xs text-gray-400 mb-1 font-mono">Текст новости</label>
+							<!-- Тулбар RU -->
+							<div class="flex flex-wrap gap-1 bg-zinc-900 border border-zinc-700 border-b-0 p-1.5 rounded-t text-xs font-mono">
+								<button type="button" onclick="insertTag('newsContentRu', 'b')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded font-bold cursor-pointer" title="Жирный">B</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'i')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded italic cursor-pointer" title="Курсив">I</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'blockquote')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Цитата">“ Цитата</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'ul')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Маркированный список">• Список</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'ol')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Нумерованный список">1. Список</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold" title="Сделать текст красным">Красный текст</button>
+							</div>
+							<textarea id="newsContentRu" rows="10" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-b focus:outline-none focus:border-amber-500 font-sans text-sm resize-y" placeholder="Напишите текст... Используйте инструменты выше для форматирования выделенного фрагмента."></textarea>
+						</div>
+					</div>
+
+					<!-- АНГЛИЙСКАЯ ВЕРСИЯ -->
+					<div class="border border-zinc-800 p-4 rounded bg-zinc-900/30">
+						<span class="inline-block text-xs font-bold bg-amber-500/10 text-amber-400 px-2 py-1 rounded mb-4 font-mono border border-amber-500/20">ENGLISH VERSION</span>
+						<div class="mb-4">
+							<label class="block text-xs text-gray-400 mb-1 font-mono">News Title</label>
+							<input type="text" id="newsTitleEn" class="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 rounded focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+						<div class="mb-4">
+							<label class="block text-xs text-gray-400 mb-1 font-mono">News Content</label>
+							<!-- Тулбар EN -->
+							<div class="flex flex-wrap gap-1 bg-zinc-900 border border-zinc-700 border-b-0 p-1.5 rounded-t text-xs font-mono">
+								<button type="button" onclick="insertTag('newsContentEn', 'b')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded font-bold cursor-pointer">B</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'i')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded italic cursor-pointer">I</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'blockquote')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">“ Quote</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'ul')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">• List</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'ol')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">1. List</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold">Red Text</button>
+							</div>
+							<textarea id="newsContentEn" rows="10" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-b focus:outline-none focus:border-amber-500 font-sans text-sm resize-y" placeholder="Write content... Use tools above to format selection."></textarea>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- Кнопки управления -->
+				<div class="flex justify-end gap-3 border-t border-zinc-800 pt-4 mt-6">
+					<button onclick="closeEditorModal()" class="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors cursor-pointer font-mono">Отмена</button>
+					<button onclick="saveNews()" class="px-5 py-2 text-sm bg-amber-600 hover:bg-amber-500 text-black font-bold rounded transition-colors cursor-pointer font-mono uppercase tracking-wide">Сохранить новость</button>
+				</div>
+			</div>
+	</div>
 
     <!-- ========== LIGHTBOX ========== -->
     <div id="lightbox" class="fixed inset-0 z-[10000] hidden bg-black/95 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeLightbox(event)">
@@ -1969,8 +2057,223 @@
             return 'en'; 
         }
         
+
+
+
+// ========== ADMIN PANEL CONFIG & LOGIC ==========
+const ADMIN_PASSWORD = "7182";
+// Проверка состояния админа при загрузке
+let isAdminMode = localStorage.getItem('wbAdminActive') === 'true';
+
+function updateAdminUI() {
+    const loginBtn = document.getElementById('adminLoginBtn');
+    const logoutBtn = document.getElementById('adminLogoutBtn');
+    
+    if (isAdminMode) {
+        if(loginBtn) loginBtn.classList.add('hidden');
+        if(logoutBtn) logoutBtn.classList.remove('hidden');
+        injectAdminControls();
+    } else {
+        if(loginBtn) loginBtn.classList.remove('hidden');
+        if(logoutBtn) logoutBtn.classList.add('hidden');
+        removeAdminControls();
+    }
+}
+
+// Окна входа
+function openAdminModal() { document.getElementById('authModal').classList.remove('hidden'); }
+function closeAdminModal() { document.getElementById('authModal').classList.add('hidden'); document.getElementById('adminPasswordInput').value = ''; }
+
+function checkAdminPassword() {
+    const input = document.getElementById('adminPasswordInput').value;
+    if (input === ADMIN_PASSWORD) {
+        localStorage.setItem('wbAdminActive', 'true');
+        alert('Доступ разрешен. Перезагрузка системы...');
+        location.reload();
+    } else {
+        alert('Ошибка доступа: Неверный пароль.');
+    }
+}
+
+function logoutAdmin() {
+    localStorage.removeItem('wbAdminActive');
+    alert('Сессия завершена. Перезагрузка...');
+    location.reload();
+}
+
+// Визуальный редактор тегов
+function insertTag(textareaId, tag) {
+    const textarea = document.getElementById(textareaId);
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    const selectedText = text.substring(start, end);
+    
+    let replacement = "";
+    if (tag === 'red') {
+        replacement = `<span class="text-red-500 font-semibold">${selectedText || 'красный текст'}</span>`;
+    } else if (tag === 'ul') {
+        replacement = `\n<ul class="list-disc pl-5 my-2 space-y-1">\n  <li>${selectedText || 'Пункт списка'}</li>\n</ul>\n`;
+    } else if (tag === 'ol') {
+        replacement = `\n<ol class="list-decimal pl-5 my-2 space-y-1">\n  <li>${selectedText || 'Номер пункта'}</li>\n</ol>\n`;
+    } else if (tag === 'blockquote') {
+        replacement = `\n<blockquote class="border-l-4 border-amber-500 bg-zinc-900/50 pl-4 py-1 italic my-3 text-gray-400">${selectedText || 'Цитата'}</blockquote>\n`;
+    } else {
+        replacement = `<${tag}>${selectedText}</${tag}>`;
+    }
+    
+    textarea.value = text.substring(0, start) + replacement + text.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + replacement.length, start + replacement.length);
+}
+
+// Окна редактора
+function openEditorModal(newsId = '') {
+    const modal = document.getElementById('editorModal');
+    document.getElementById('editNewsId').value = newsId;
+    
+    if (newsId) {
+        document.getElementById('editorModalTitle').innerText = "Редактирование новости";
+        const customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
+        const item = customNews.find(n => n.id === newsId);
+        if (item) {
+            document.getElementById('newsImgUrl').value = item.image || '';
+            document.getElementById('newsTitleRu').value = item.title.ru || '';
+            document.getElementById('newsContentRu').value = item.content.ru || '';
+            document.getElementById('newsTitleEn').value = item.title.en || '';
+            document.getElementById('newsContentEn').value = item.content.en || '';
+        }
+    } else {
+        document.getElementById('editorModalTitle').innerText = "Создание новости";
+        document.getElementById('newsImgUrl').value = '';
+        document.getElementById('newsTitleRu').value = '';
+        document.getElementById('newsContentRu').value = '';
+        document.getElementById('newsTitleEn').value = '';
+        document.getElementById('newsContentEn').value = '';
+    }
+    modal.classList.remove('hidden');
+}
+
+function closeEditorModal() { document.getElementById('editorModal').classList.add('hidden'); }
+
+// Сохранение новости
+function saveNews() {
+    const id = document.getElementById('editNewsId').value;
+    const image = document.getElementById('newsImgUrl').value || 'https://via.placeholder.com/800x450';
+    const titleRu = document.getElementById('newsTitleRu').value;
+    const contentRu = document.getElementById('newsContentRu').value;
+    const titleEn = document.getElementById('newsTitleEn').value;
+    const contentEn = document.getElementById('newsContentEn').value;
+    
+    if (!titleRu || !contentRu || !titleEn || !contentEn) {
+        alert('Заполните заголовки и текст для обеих версий языков!');
+        return;
+    }
+    
+    let customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
+    const today = new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.');
+
+    if (id) {
+        customNews = customNews.map(item => {
+            if (item.id === id) {
+                return { ...item, image, title: { ru: titleRu, en: titleEn }, content: { ru: contentRu, en: contentEn } };
+            }
+            return item;
+        });
+    } else {
+        const newPost = {
+            id: 'news-' + Date.now(),
+            date: today,
+            image: image,
+            title: { ru: titleRu, en: titleEn },
+            content: { ru: contentRu, en: contentEn }
+        };
+        customNews.unshift(newPost);
+    }
+    
+    localStorage.setItem('wbCustomNews', JSON.stringify(customNews));
+    alert('Новость успешно сохранена!');
+    closeEditorModal();
+    location.reload();
+}
+
+function deleteNews(id) {
+    if (confirm('Вы уверены, что хотите удалить эту новость?')) {
+        let customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
+        customNews = customNews.filter(item => item.id !== id);
+        localStorage.setItem('wbCustomNews', JSON.stringify(customNews));
+        location.reload();
+    }
+}
+
+// Внедрение кнопки "Создать"
+function injectAdminControls() {
+    const newsContainer = document.getElementById('news').querySelector('.max-w-5xl'); 
+    if (newsContainer && !document.getElementById('adminAddNewsBtn')) {
+        const addBtn = document.createElement('button');
+        addBtn.id = 'adminAddNewsBtn';
+        addBtn.className = 'mx-auto block mb-8 bg-amber-600 hover:bg-amber-500 text-black px-6 py-2.5 rounded font-bold font-mono text-sm uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-amber-600/10 border border-amber-700 animate-pulse';
+        addBtn.innerText = '+ Создать новую новость';
+        addBtn.onclick = () => openEditorModal('');
+        newsContainer.insertBefore(addBtn, document.getElementById('newsList'));
+    }
+}
+
+function removeAdminControls() {
+    const btn = document.getElementById('adminAddNewsBtn');
+    if (btn) btn.remove();
+}
+
+// --- ФИКС: Адаптация кастомных новостей под оригинальный массив ---
+function loadAndMergeCustomNews() {
+    const customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
+    
+    const formattedNews = customNews.map(item => ({
+        id: item.id,
+        slug: item.id,
+        badge: 'NEWS',
+        date: item.date,
+        title: item.title.en,
+        titleRu: item.title.ru,
+        // Очищаем HTML теги для краткого описания в карточке
+        excerptEn: item.content.en.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...',
+        excerptRu: item.content.ru.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...',
+        image: item.image,
+        content: `
+            <div class="lang-en">\n<p class="mb-4">${item.content.en}</p>\n</div>
+            <div class="lang-ru hidden">\n<p class="mb-4">${item.content.ru}</p>\n</div>
+        `,
+        isCustom: true // Флаг для отображения кнопок админа
+    }));
+
+    // Добавляем созданные новости в начало стандартного массива ДО рендера
+    newsData.unshift(...formattedNews);
+}
+
+// Запускаем слияние до инициализации сайта
+loadAndMergeCustomNews();
+
+// Модифицируем оригинальную функцию карточки, чтобы добавить кнопки ред./уд. только для админа
+const originalRenderNewsCard = renderNewsCard;
+renderNewsCard = function(data, index) {
+    let cardHtml = originalRenderNewsCard(data, index);
+    
+    if (isAdminMode && data.isCustom) {
+        const adminButtonsHtml = `
+            <div class="mt-4 flex gap-2 pt-3 text-xs font-mono relative z-10 border-t border-gray-800" onclick="event.preventDefault(); event.stopPropagation();">
+                <button onclick="openEditorModal('${data.id}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer">Редактировать</button>
+                <button onclick="deleteNews('${data.id}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-500 hover:text-white rounded transition-all cursor-pointer">Удалить</button>
+            </div>
+        `;
+        // Безопасно встраиваем кнопки внутрь карточки перед закрывающим тегом
+        cardHtml = cardHtml.replace(/(<\/div>\s*<\/a>)/, adminButtonsHtml + '$1');
+    }
+    return cardHtml;
+};
+		
 // Initialize Default
         const startLang = getInitialLanguage();
+		updateAdminUI();
         renderNewsPage(getInitialNewsPage());
         setLang(startLang);
         handleNewsRoute();

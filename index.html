@@ -1150,9 +1150,10 @@
 								<button type="button" onclick="insertTag('newsContentRu', 'h3')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H3</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'ul')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Маркированный список">• Список</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'ol')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer" title="Нумерованный список">1. Список</button>
-								<button type="button" onclick="insertTag('newsContentRu', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold" title="Сделать текст красным">Красный текст</button>
+								<button type="button" onclick="insertTag('newsContentRu', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold" title="Сделать текст красным">Красный</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'green')" class="px-2 py-0.5 bg-green-950/50 border border-green-800 text-green-400 hover:bg-green-900 rounded text-xs font-mono">Зеленый</button>
 								<button type="button" onclick="insertTag('newsContentRu', 'amber')" class="px-2 py-0.5 bg-amber-950/50 border border-amber-800 text-amber-400 hover:bg-amber-900 rounded text-xs font-mono">Янтарный</button>
+								<button type="button" onclick="insertImage('newsContentRu')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">Изобр.</button>
 							</div>
 							<textarea id="newsContentRu" rows="10" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-b focus:outline-none focus:border-amber-500 font-sans text-sm resize-y" placeholder="Напишите текст... Используйте инструменты выше для форматирования выделенного фрагмента."></textarea>
 						</div>
@@ -1177,9 +1178,10 @@
 								<button type="button" onclick="insertTag('newsContentEn', 'h3')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">H3</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'ul')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">• List</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'ol')" class="px-2 py-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 rounded cursor-pointer">1. List</button>
-								<button type="button" onclick="insertTag('newsContentEn', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold">Red Text</button>
+								<button type="button" onclick="insertTag('newsContentEn', 'red')" class="px-2 py-1 bg-red-950/50 hover:bg-red-900 border border-red-900 text-red-400 rounded cursor-pointer font-bold">Red</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'green')" class="px-2 py-0.5 bg-green-950/50 border border-green-800 text-green-400 hover:bg-green-900 rounded text-xs font-mono">Green</button>
 								<button type="button" onclick="insertTag('newsContentEn', 'amber')" class="px-2 py-0.5 bg-amber-950/50 border border-amber-800 text-amber-400 hover:bg-amber-900 rounded text-xs font-mono">Amber</button>
+								<button type="button" onclick="insertImage('newsContentEn')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-xs font-mono">Image</button>
 							</div>
 							<textarea id="newsContentEn" rows="10" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-b focus:outline-none focus:border-amber-500 font-sans text-sm resize-y" placeholder="Write content... Use tools above to format selection."></textarea>
 						</div>
@@ -2341,6 +2343,35 @@ renderNewsCard = function(data, index) {
     }
     return cardHtml;
 };
+
+function insertImage(textareaId) {
+    const url = prompt("Введите URL-ссылку на изображение:");
+    if (!url) return; // Если пользователь нажал "Отмена" или ничего не ввел
+
+    const caption = prompt("Введите подпись под картинкой (оставьте пустым, если подпись не нужна):");
+    
+    // Формируем адаптивный HTML-контейнер для картинки
+    let replacement = `\n<div class="my-5 text-center">\n  <img src="${url}" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">\n`;
+    
+    // Если подпись введена, добавляем её мелким шрифтом
+    if (caption && caption.trim() !== "") {
+        replacement += `  <p class="text-[11px] text-zinc-500 font-mono mt-2 italic tracking-wide text-center">${caption}</p>\n`;
+    }
+    
+    replacement += `</div>\n`;
+    
+    const textarea = document.getElementById(textareaId);
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+    
+    // Вставляем код в место, где находился курсор
+    textarea.value = text.substring(0, start) + replacement + text.substring(end);
+    
+    // Возвращаем фокус на поле
+    textarea.focus();
+    textarea.setSelectionRange(start + replacement.length, start + replacement.length);
+}
 
 function closeEditorModal() { 
     document.getElementById('editorModal').classList.add('hidden'); 

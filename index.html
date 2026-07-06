@@ -2346,14 +2346,28 @@ renderNewsCard = function(data, index) {
 
 function insertImage(textareaId) {
     const url = prompt("Введите URL-ссылку на изображение:");
-    if (!url) return; // Если пользователь нажал "Отмена" или ничего не ввел
+    if (!url) return; // Отмена, если ничего не ввели
 
-    const caption = prompt("Введите подпись под картинкой (оставьте пустым, если подпись не нужна):");
+    const caption = prompt("Введите подпись под картинкой (оставьте пустым, если не нужна):");
     
-    // Формируем адаптивный HTML-контейнер для картинки
-    let replacement = `\n<div class="my-5 text-center">\n  <img src="${url}" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">\n`;
+    // Запрашиваем ширину
+    let widthInput = prompt("Укажите ширину картинки (например: 100%, 50%, 400px).\nОставьте пустым для ширины по умолчанию (100%):");
     
-    // Если подпись введена, добавляем её мелким шрифтом
+    // Обрабатываем введенное значение
+    let widthStyle = "100%"; // Значение по умолчанию
+    if (widthInput && widthInput.trim() !== "") {
+        widthInput = widthInput.trim();
+        // Если пользователь ввел просто цифру (например, 400), автоматически добавляем 'px'
+        if (!isNaN(widthInput)) {
+            widthStyle = widthInput + "px";
+        } else {
+            widthStyle = widthInput; // Если ввел '50%' или '400px'
+        }
+    }
+
+    // Формируем HTML. Обратите внимание на style="width: ${widthStyle};"
+    let replacement = `\n<div class="my-5 text-center">\n  <img src="${url}" style="width: ${widthStyle};" class="max-h-[600px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">\n`;
+    
     if (caption && caption.trim() !== "") {
         replacement += `  <p class="text-[11px] text-zinc-500 font-mono mt-2 italic tracking-wide text-center">${caption}</p>\n`;
     }
@@ -2365,10 +2379,7 @@ function insertImage(textareaId) {
     const end = textarea.selectionEnd;
     const text = textarea.value;
     
-    // Вставляем код в место, где находился курсор
     textarea.value = text.substring(0, start) + replacement + text.substring(end);
-    
-    // Возвращаем фокус на поле
     textarea.focus();
     textarea.setSelectionRange(start + replacement.length, start + replacement.length);
 }

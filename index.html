@@ -57,286 +57,319 @@
 		}  /* For notes/stamps */
 
 		/* ========== TEXTURES & FX ========== */
-        /* Film Grain */
-        .grain-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.08;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            mix-blend-mode: overlay;
-        }
+		/* Film Grain */
+		.grain-overlay {
+		position: fixed;
+		top: 0; left: 0; width: 100%; height: 100%;
+		pointer-events: none;
+		z-index: 9999;
+		opacity: 0.08;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+		mix-blend-mode: overlay;
+		}
 
-        /* Vignette */
-        .vignette {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.8) 120%);
-        }
+		/* Vignette */
+		.vignette {
+		position: fixed;
+		top: 0; left: 0; width: 100%; height: 100%;
+		pointer-events: none;
+		z-index: 9998;
+		background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.8) 120%);
+		}
 
-        /* Scratches/Lines (CSS Pattern) */
-        .scratched-bg {
-            background-color: var(--bg-dark);
-            background-image: repeating-linear-gradient(
-                135deg,
-                transparent,
-                transparent 10px,
-                rgba(255, 255, 255, 0.03) 10px,
-                rgba(255, 255, 255, 0.03) 11px
-            );
-        }
+		/* Scratches/Lines (CSS Pattern) */
+		.scratched-bg {
+		background-color: var(--bg-dark);
+		background-image: repeating-linear-gradient(
+		135deg,
+		transparent,
+		transparent 10px,
+		rgba(255, 255, 255, 0.03) 10px,
+		rgba(255, 255, 255, 0.03) 11px
+		);
+		}
 
-        /* ========== UI COMPONENTS ========== */
-        
-        /* Navigation - Industrial Tape Style */
-        .nav-bar {
-            background: #111;
-            border-bottom: 4px solid var(--accent-blood);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-        }
-        
-        .nav-link {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            color: #888;
-            text-decoration: none;
-            padding: 0 15px;
-            position: relative;
-            transition: all 0.2s;
-        }
-        .nav-link:hover {
-            color: white;
-            text-shadow: 2px 2px 0 var(--accent-blood);
-            transform: skew(-10deg);
-        }
-        .nav-link.active { color: var(--accent-blood); }
+		/* ========== UI COMPONENTS ========== */
 
-        /* Buttons - Heavy Industrial */
-        .btn-brutal {
-            display: inline-block;
-            background: var(--bg-dark);
-            color: white;
-            font-family: 'Anton', sans-serif;
-            font-size: 1.8rem;
-            padding: 1rem 3rem;
-            border: 4px solid white;
-            text-transform: uppercase;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.1s;
-            clip-path: polygon(
-                0 0, 
-                100% 0, 
-                100% calc(100% - 15px), 
-                calc(100% - 15px) 100%, 
-                0 100%
-            );
-        }
-        .btn-brutal:hover {
-            background: var(--accent-blood);
-            border-color: var(--accent-blood);
-            color: black;
-            transform: translate(-2px, -2px);
-            box-shadow: 4px 4px 0 rgba(255,255,255,0.2);
-        }
-        .btn-brutal:active {
-            transform: translate(1px, 1px);
-        }
+		/* Navigation - Industrial Tape Style */
+		.nav-bar {
+		background: #111;
+		border-bottom: 4px solid var(--accent-blood);
+		box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+		}
 
-        .btn-outline {
-            display: inline-block;
-            background: transparent;
-            color: var(--text-offwhite);
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            padding: 0.8rem 2.5rem;
-            border: 2px solid var(--text-dirty);
-            border-radius: 0;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-outline:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: white;
-            letter-spacing: 2px;
-        }
+		.nav-link {
+		font-family: 'Bebas Neue', sans-serif;
+		font-size: 1.5rem;
+		color: #888;
+		text-decoration: none;
+		padding: 0 15px;
+		position: relative;
+		transition: all 0.2s;
+		}
+		.nav-link:hover {
+		color: white;
+		text-shadow: 2px 2px 0 var(--accent-blood);
+		transform: skew(-10deg);
+		}
+		.nav-link.active { color: var(--accent-blood); }
 
-        /* Section Titles - Stencil/Spray Paint Style */
-        .grunge-title {
-            display: inline-block;
-            font-size: 4rem;
-            color: var(--bg-black);
-            background: var(--text-offwhite);
-            padding: 10px 30px;
-            transform: skew(-5deg) rotate(-2deg);
-            margin-bottom: 3rem;
-            border: 2px solid var(--bg-black);
-            box-shadow: 10px 10px 0 var(--accent-blood);
-        }
-        .grunge-title span {
-            color: var(--accent-blood);
-        }
+		/* Buttons - Heavy Industrial */
+		.btn-brutal {
+		display: inline-block;
+		background: var(--bg-dark);
+		color: white;
+		font-family: 'Anton', sans-serif;
+		font-size: 1.8rem;
+		padding: 1rem 3rem;
+		border: 4px solid white;
+		text-transform: uppercase;
+		position: relative;
+		cursor: pointer;
+		transition: all 0.1s;
+		clip-path: polygon(
+		0 0,
+		100% 0,
+		100% calc(100% - 15px),
+		calc(100% - 15px) 100%,
+		0 100%
+		);
+		}
+		.btn-brutal:hover {
+		background: var(--accent-blood);
+		border-color: var(--accent-blood);
+		color: black;
+		transform: translate(-2px, -2px);
+		box-shadow: 4px 4px 0 rgba(255,255,255,0.2);
+		}
+		.btn-brutal:active {
+		transform: translate(1px, 1px);
+		}
 
-        /* Cards - Distressed */
-        .grunge-card {
-            background: #161616;
-            border: 1px solid #333;
-            padding: 2rem;
-            position: relative;
-            transition: transform 0.2s;
-        }
-        .grunge-card::before {
-            content: '';
-            position: absolute;
-            top: -5px; left: -5px;
-            width: 20px; height: 20px;
-            border-top: 3px solid var(--accent-blood);
-            border-left: 3px solid var(--accent-blood);
-        }
-        .grunge-card::after {
-            content: '';
-            position: absolute;
-            bottom: -5px; right: -5px;
-            width: 20px; height: 20px;
-            border-bottom: 3px solid var(--accent-blood);
-            border-right: 3px solid var(--accent-blood);
-        }
-        .grunge-card:hover {
-            border-color: #555;
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
+		.btn-outline {
+		display: inline-block;
+		background: transparent;
+		color: var(--text-offwhite);
+		font-family: 'Bebas Neue', sans-serif;
+		font-size: 1.5rem;
+		padding: 0.8rem 2.5rem;
+		border: 2px solid var(--text-dirty);
+		border-radius: 0;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: 0.3s;
+		}
+		.btn-outline:hover {
+		background: rgba(255,255,255,0.1);
+		border-color: white;
+		letter-spacing: 2px;
+		}
 
-        /* Screenshots - Polaroid/Taped feel */
-        .photo-frame {
-            background: #fff;
-            padding: 10px 10px 40px 10px;
-            transform: rotate(1deg);
-            transition: 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            cursor: pointer;
-            position: relative;
-        }
-        .photo-frame:hover {
-            transform: rotate(0deg) scale(1.05);
-            z-index: 10;
-        }
-        .photo-frame img {
-            width: 100%;
-            height: auto;
-            filter: grayscale(80%) contrast(1.2) sepia(20%);
-            transition: 0.3s;
-            display: block;
-        }
-        .photo-frame:hover img {
-            filter: grayscale(0%) contrast(1.0);
-        }
-        .photo-frame::after {
-            content: 'SCREENSHOT';
-            position: absolute;
-            bottom: 10px; left: 0; width: 100%;
-            text-align: center;
-            font-family: 'Courier Prime', monospace;
-            color: #000;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
+		/* Section Titles - Stencil/Spray Paint Style */
+		.grunge-title {
+		display: inline-block;
+		font-size: 4rem;
+		color: var(--bg-black);
+		background: var(--text-offwhite);
+		padding: 10px 30px;
+		transform: skew(-5deg) rotate(-2deg);
+		margin-bottom: 3rem;
+		border: 2px solid var(--bg-black);
+		box-shadow: 10px 10px 0 var(--accent-blood);
+		}
+		.grunge-title span {
+		color: var(--accent-blood);
+		}
 
-        /* Tape Effect */
-        .tape-strip {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%) rotate(-2deg);
-            width: 100px;
-            height: 30px;
-            background: rgba(255,255,255,0.2);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            backdrop-filter: blur(2px);
-            z-index: 20;
-        }
+		/* Cards - Distressed */
+		.grunge-card {
+		background: #161616;
+		border: 1px solid #333;
+		padding: 2rem;
+		position: relative;
+		transition: transform 0.2s;
+		}
+		.grunge-card::before {
+		content: '';
+		position: absolute;
+		top: -5px; left: -5px;
+		width: 20px; height: 20px;
+		border-top: 3px solid var(--accent-blood);
+		border-left: 3px solid var(--accent-blood);
+		}
+		.grunge-card::after {
+		content: '';
+		position: absolute;
+		bottom: -5px; right: -5px;
+		width: 20px; height: 20px;
+		border-bottom: 3px solid var(--accent-blood);
+		border-right: 3px solid var(--accent-blood);
+		}
+		.grunge-card:hover {
+		border-color: #555;
+		transform: translateY(-5px);
+		box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+		}
 
-        /* Utility */
-        .text-accent { color: var(--accent-blood); }
-        .border-accent { border-color: var(--accent-blood); }
-        .bg-ragged {
-            clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
-        }
+		/* Screenshots - Polaroid/Taped feel */
+		.photo-frame {
+		background: #fff;
+		padding: 10px 10px 40px 10px;
+		transform: rotate(1deg);
+		transition: 0.3s;
+		box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+		cursor: pointer;
+		position: relative;
+		}
+		.photo-frame:hover {
+		transform: rotate(0deg) scale(1.05);
+		z-index: 10;
+		}
+		.photo-frame img {
+		width: 100%;
+		height: auto;
+		filter: grayscale(80%) contrast(1.2) sepia(20%);
+		transition: 0.3s;
+		display: block;
+		}
+		.photo-frame:hover img {
+		filter: grayscale(0%) contrast(1.0);
+		}
+		.photo-frame::after {
+		content: 'SCREENSHOT';
+		position: absolute;
+		bottom: 10px; left: 0; width: 100%;
+		text-align: center;
+		font-family: 'Courier Prime', monospace;
+		color: #000;
+		font-size: 0.8rem;
+		font-weight: bold;
+		}
 
-        /* UI Elements */
-        .hazard-stripe {
-            background: repeating-linear-gradient(
-                45deg,
-                #000,
-                #000 10px,
-                #b48a14 10px,
-                #b48a14 20px
-            );
-        }
-        
-        .ui-corner {
-            position: absolute;
-            width: 10px; height: 10px;
-            border: 2px solid var(--accent-blood);
-            transition: 0.3s;
-            pointer-events: none; /* FIX: Allows clicks to pass through */
-        }
-        .ui-corner-tl { top: -2px; left: -2px; border-bottom: none; border-right: none; }
-        .ui-corner-tr { top: -2px; right: -2px; border-bottom: none; border-left: none; }
-        .ui-corner-bl { bottom: -2px; left: -2px; border-top: none; border-right: none; }
-        .ui-corner-br { bottom: -2px; right: -2px; border-top: none; border-left: none; }
+		/* Tape Effect */
+		.tape-strip {
+		position: absolute;
+		top: -15px;
+		left: 50%;
+		transform: translateX(-50%) rotate(-2deg);
+		width: 100px;
+		height: 30px;
+		background: rgba(255,255,255,0.2);
+		box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+		backdrop-filter: blur(2px);
+		z-index: 20;
+		}
 
-        .group:hover .ui-corner {
-            width: 100%; height: 100%;
-            opacity: 0.2;
-        }
+		/* Utility */
+		.text-accent { color: var(--accent-blood); }
+		.border-accent { border-color: var(--accent-blood); }
+		.bg-ragged {
+		clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+		}
 
-        /* Subtle Holographic Flicker (Non-Destructive) */
-        @keyframes holo-flicker {
-            0%, 100% { 
-                opacity: 1; 
-                transform: translate(0,0) scale(1);
-                filter: brightness(1) drop-shadow(0 0 0 transparent); 
-            }
-            3% { 
-                opacity: 0.9; 
-                transform: translate(-1px, 0);
-                filter: brightness(1.2) drop-shadow(2px 0 0 rgba(255,0,0,0.5)); 
-            }
-            6% { 
-                opacity: 1; 
-                transform: translate(1px, 0);
-                filter: brightness(0.9) drop-shadow(-2px 0 0 rgba(0,255,255,0.5)); 
-            }
-            7% { opacity: 1; transform: translate(0,0); filter: brightness(1); }
-            40% { opacity: 1; filter: brightness(1); }
-            41% { 
-                opacity: 0.8; 
-                filter: brightness(1.3) sepia(0.5) saturate(2);
-            }
-            42% { opacity: 1; filter: brightness(1); }
-        }
+		/* UI Elements */
+		.hazard-stripe {
+		background: repeating-linear-gradient(
+		45deg,
+		#000,
+		#000 10px,
+		#b48a14 10px,
+		#b48a14 20px
+		);
+		}
 
-        .title-glitch {
-            animation: holo-flicker 5s infinite step-end;
-        }
-        .title-glitch-img {
-            animation: holo-flicker 6s infinite ease-in-out;
-            will-change: opacity, transform, filter;
-            max-width: 100%;
-        }
+		.ui-corner {
+		position: absolute;
+		width: 10px; height: 10px;
+		border: 2px solid var(--accent-blood);
+		transition: 0.3s;
+		pointer-events: none; /* FIX: Allows clicks to pass through */
+		}
+		.ui-corner-tl { top: -2px; left: -2px; border-bottom: none; border-right: none; }
+		.ui-corner-tr { top: -2px; right: -2px; border-bottom: none; border-left: none; }
+		.ui-corner-bl { bottom: -2px; left: -2px; border-top: none; border-right: none; }
+		.ui-corner-br { bottom: -2px; right: -2px; border-top: none; border-left: none; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; border: 2px solid #000; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-blood); }
+		.group:hover .ui-corner {
+		width: 100%; height: 100%;
+		opacity: 0.2;
+		}
 
-    </style>
+		/* Subtle Holographic Flicker (Non-Destructive) */
+		@keyframes holo-flicker {
+		0%, 100% {
+		opacity: 1;
+		transform: translate(0,0) scale(1);
+		filter: brightness(1) drop-shadow(0 0 0 transparent);
+		}
+		3% {
+		opacity: 0.9;
+		transform: translate(-1px, 0);
+		filter: brightness(1.2) drop-shadow(2px 0 0 rgba(255,0,0,0.5));
+		}
+		6% {
+		opacity: 1;
+		transform: translate(1px, 0);
+		filter: brightness(0.9) drop-shadow(-2px 0 0 rgba(0,255,255,0.5));
+		}
+		7% { opacity: 1; transform: translate(0,0); filter: brightness(1); }
+		40% { opacity: 1; filter: brightness(1); }
+		41% {
+		opacity: 0.8;
+		filter: brightness(1.3) sepia(0.5) saturate(2);
+		}
+		42% { opacity: 1; filter: brightness(1); }
+		}
+
+		.title-glitch {
+		animation: holo-flicker 5s infinite step-end;
+		}
+		.title-glitch-img {
+		animation: holo-flicker 6s infinite ease-in-out;
+		will-change: opacity, transform, filter;
+		max-width: 100%;
+		}
+
+		/* ===== NEW Badge ===== */
+		.news-badge {
+		position: absolute;
+		top: 18px;
+		left: 18px;
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+
+		padding: 4px 14px;
+
+		background: #9d1010;
+		color: #fff;
+
+		font-family: 'Bebas Neue', sans-serif;
+		font-size: 1rem;
+		letter-spacing: 2px;
+		line-height: 1;
+
+		border: 2px solid #ffffff;
+
+		transform: rotate(-8deg);
+
+		box-shadow:
+		-3px 3px 0 #000,
+		0 0 12px rgba(157,16,16,.45);
+
+		user-select: none;
+		pointer-events: none;
+		z-index: 10;
+		}
+
+		/* Custom Scrollbar */
+		::-webkit-scrollbar { width: 12px; }
+		::-webkit-scrollbar-track { background: #000; }
+		::-webkit-scrollbar-thumb { background: #333; border: 2px solid #000; }
+		::-webkit-scrollbar-thumb:hover { background: var(--accent-blood); }
+
+	</style>
 </head>
 <body class="antialiased selection:bg-red-900 selection:text-white">
 
@@ -1258,6 +1291,296 @@
 		// Data
 		const newsData = [
 		{
+		slug: 'woolly-bunny-update-the-new-vision',
+		badge: 'UPDATE',
+		date: '08.07.2026',
+		title: 'Woolly Bunny Update: The New Vision',
+		titleRu: 'Обновление Woolly Bunny: The New Vision',
+		excerptEn: 'This update was first teased way back in January with version 0.11, and then officially announced in...',
+		excerptRu: 'Это обновление было косвенно анонсировано еще в далеком январе с выходом версии 0.11, а потом и...',
+		image: 'photo_2026-06-20_19-42-24.jpg',
+		content: `
+		<span class="news-badge">NEW!</span>
+		<div class="lang-en">
+			<p class="mb-4">This update was first teased way back in January with version 0.11, and then officially announced in March.</p>
+
+			<p class="mb-4">Originally, it was planned for this spring. However, I decided to delay it for two reasons:</p>
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>to make sure the update ships with as few bugs as possible and meets the quality standards I want;</li>
+				<li>because of the upcoming release of GTA 6 this fall.</li>
+			</ul>
+
+			<p class="mb-4">There's no rush. Woolly Bunny definitely won't be releasing in 2026. I'm developing the game solo, and the amazing people helping me aren't game developers themselves.</p>
+
+			<p class="mb-4">Because of that, I can't promise a fixed schedule for future updates. Still, our small team is doing everything we can, one step at a time.</p>
+
+			<p class="mb-4">Over the past six months, Woolly Bunny has gone through several major changes. Here's what's new:</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Story Illustrations</h1>
+
+
+			<div class="my-5 text-center">
+				<img src="IMG_1977.PNG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+
+			<p class="mb-4">The biggest addition in The New Vision is the introduction of story illustrations.</p>
+
+			<p class="mb-4">These are cinematic illustrations that appear during key moments in the story, helping show scenes exactly as they were imagined while making them more immersive for the player.</p>
+
+			<p class="mb-4">Some scenes now feel much more cinematic and are presented from a fresh perspective.</p>
+
+			<p class="mb-4">This feature is only getting started. The illustrations included in this update are meant as an introduction to the system. The full release will feature many more of them.</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Reworked Locations</h1>
+
+			<div class="my-5 text-center">
+				<img src="IMG_1979.PNG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+			<div class="my-5 text-center">
+				<img src="IMG_1978.JPG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+
+			<p class="mb-4">The game's environments have received a major visual overhaul.</p>
+
+			<p class="mb-4">Lighting has been improved, shadows are more detailed, important story elements have been redesigned, and the overall art style now leans toward a more realistic look.</p>
+
+			<p class="mb-4">
+				Locations will continue evolving over time, and <a href="https://t.me/darkosus_OGG" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">your feedback</a> will help shape them.
+			</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Reworked Characters</h1>
+
+
+			<div class="my-5 text-center">
+				<img src="IMG_1981.PNG" style="width: 1080px;" class="max-h-[1920px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+
+			<div class="my-5 text-center">
+				<img src="IMG_1980.PNG" style="width: 1080px;" class="max-h-[1920px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+			<p class="mb-4">The characters have also received a complete visual redesign.</p>
+
+			<p class="mb-4">Every character now has a brand-new model that better matches the updated environments while adding small story details and visual references that weren't present before.</p>
+
+			<p class="mb-4">Just like the environments, character models will continue to improve over time.</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">More Player Control</h1>
+
+			<div class="my-5 text-center">
+				<img src="IMG_1982.PNG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+			<p class="mb-4">You can now go back to the previous line of dialogue or skip story scenes entirely.</p>
+
+			<p class="mb-4">These features were added to make replaying scenes much more convenient and to let you easily recover if you accidentally skipped an important line.</p>
+
+			<p class="mb-4">There's also a new Hide button in the top-right corner of the dialogue window, allowing you to enjoy the artwork without the UI getting in the way.</p>
+
+			<p class="mb-4">
+				As always, <a href="https://t.me/darkosus_OGG" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">I'd love to hear what you think.</a>
+			</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Various Fixes & Improvements</h1>
+
+
+			<p class="mb-4">Here's the full patch notes.</p>
+
+
+			<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">Visual</h3>
+
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>Improved background transition animations. Story illustrations and location backgrounds now use different transition effects.</li>
+				<li>Updated the color grading of several backgrounds.</li>
+				<li>Redesigned the collectible viewer.</li>
+				<li>Adjusted the size of UI elements in Story Mode (dialogue box, story notifications, and text).</li>
+				<li>Fixed an issue where tool icons in the power substation puzzle would randomly snap to the center of the screen.</li>
+				<li>Fixed an issue where the death animation wouldn't play correctly after dying multiple times.</li>
+			</ul>
+
+
+			<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">Story</h3>
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>Reworked Chapter 1.</li>
+				<li>Fixed various typos and dialogue issues.</li>
+				<li>Fixed an issue where players sometimes didn't receive a notification after earning Path Points.</li>
+				<li>Added Choice Hints. When enabled in Settings, Path icons will appear next to dialogue choices, showing which Path Points you'll earn from each option.</li>
+				</li>
+			</ul>
+
+
+			<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">General</h3>
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>Fixed an issue where players who created a save file in the English localization on version 0.11.0 couldn't load it. Starting with version 0.12, English save files now work correctly.</li>
+				<li>Fixed an issue where save file names displayed incorrectly in the English localization.</li>
+				<li>Fixed an issue where the keypad puzzle in Chapter 1 could unexpectedly appear again.</li>
+			</ul>
+
+
+
+
+
+			<p class="mb-4">
+				We've already got more big features planned for future updates, so stay tuned and keep an eye on our website and <a href="https://t.me/woollybunnycomm" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">Telegram community</a>!
+			</p>
+		</div>
+		
+		
+		<div class="lang-ru hidden">
+			<p class="mb-4">Это обновление было косвенно анонсировано еще в далеком январе с выходом версии 0.11, а потом и прямо — в марте.</p>
+
+			<p class="mb-4">Оно было запланировано на весну этого года, однако я решил повременить с выходом обновления по двум причинам:</p>
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>чтобы при выпуске было как можно меньше багов и все было выполнено на высшем уровне;</li>
+				<li>выход эпохальной GTA 6 этой осенью.</li>
+			</ul>
+
+			<p class="mb-4">Торопиться некуда, так как релиз самой игры будет точно не в 2026 году: игра разрабатывается в одиночку, люди, которые помогают мне, не являются разработчиками. Поэтому определенного графика выхода следующих обновлений не будет, однако вся наша маленькая команда трудится в меру своих возможностей. </p>
+
+			<p class="mb-4">За эти полгода в игре появилось несколько фундаментальных изменений. О них вы узнаете прямо сейчас:</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Сценические иллюстрации</h1>
+
+
+			<div class="my-5 text-center">
+				<img src="IMG_1977.PNG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+
+			<p class="mb-4">
+				В обновлении Woolly Bunny New Vision фигурирует самая важная её часть — <b>сценические иллюстрации.</b>
+			</p>
+
+			<p class="mb-4">Сценические иллюстрации - это сюжетные фоновые картинки, которые помогают автору передать задуманное, показывая, как тот видит ту или иную сцену, а игроку — проникнуться ей. Теперь некоторые сцены выглядят кинематографично и слегка по-новому. </p>
+
+			<p class="mb-4">Это нововведение намеренно не было реализовано в полном его потенциале. Все сценические иллюстрации, которые были добавлены в сюжетный режим, являются как бы ознакомительной функцией. На релизе иллюстраций в игре будет больше.</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Переработанные локации</h1>
+
+			<div class="my-5 text-center">
+				<img src="IMG_1979.PNG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+			<div class="my-5 text-center">
+				<img src="IMG_1978.JPG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+
+			<p class="mb-4">Графика локаций улучшилась. Свет стал лучше. Тени проработаннее. Важные сюжетные элементы стали детализированнее. Рисовка игры изменилась и стала придерживаться более реалистичной картинки. </p>
+
+			<p class="mb-4">
+				В будущем локации могут меняться и дорабатываться. Ваш голос важен, свой отзыв вы можете написать лично мне в <a href="https://t.me/darkosus_OGG" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">телеграм</a>.
+			</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Переработанные персонажи</h1>
+
+
+			<div class="my-5 text-center">
+				<img src="IMG_1981.PNG" style="width: 1080px;" class="max-h-[1920px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+
+			<div class="my-5 text-center">
+				<img src="IMG_1980.PNG" style="width: 1080px;" class="max-h-[1920px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+			<p class="mb-4">Переработанные тоже в плане визуала. В обновлении New Vision персонажи тоже получили свои новые модельки. Они выглядят более реалистично, получили много новых сюжетно важных элементов и отсылок и вписались в новый дизайн локаций. </p>
+
+			<p class="mb-4">
+				Со временем модельки также будут дорабатываться. Оставить отзыв вы можете мне лично в <a href="https://t.me/darkosus_OGG" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">телеграме</a>.
+			</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Больше взаимодействия</h1>
+
+			<div class="my-5 text-center">
+				<img src="IMG_1982.PNG" class="w-full max-h-[480px] object-cover rounded-md border border-zinc-800 mx-auto" alt="News Image">
+</div>
+
+			<p class="mb-4">В игре теперь появилась возможность вернуться на предыдущую реплику или вовсе пропустить сюжет.</p>
+
+			<p class="mb-4">Эти изменения были направлены на создание условий, при которых игрок без существенной траты своего времени может перепройти сцену/главу и при которых можно вернуться к пропущенной реплике, ничего не пропустив.</p>
+
+			<p class="mb-4">Также есть кнопка «Скрыть» в правом верхнем углу диалогового окна. Благодаря ней вы можете лицезреть фон полностью.</p>
+
+			<p class="mb-4">
+				<a href="https://t.me/darkosus_OGG" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">За отзывом уже знаете, куда идти))</a>
+			</p>
+
+
+			<h1 class="text-2xl font-bold text-white mt-5 mb-2 font-mono uppercase tracking-wider">Различные исправления и улучшения</h1>
+
+
+			<p class="mb-4">Вот полный патчноут:</p>
+
+
+			<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">Визуал</h3>
+
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>Подправлена анимация смены фонов: смена сценических иллюстраций имеет одну анимацию, а смена локаций — другую. </li>
+				<li>Изменена цветовая гамма у некоторых фонов.</li>
+				<li>Изменено оформление просмотра коллекционных предметов.</li>
+				<li>Изменен размер UI-элементов в сюжетном режиме. (диалоговое окно, сюжетное уведомление и текст).</li>
+				<li>Исправлена ошибка, из-за которой иконки инструментов в головоломке с подстанцией бесконтрольно центрировались на экране.</li>
+				<li>Исправлена ошибка, из-за которой отсутствовала анимация при повторной смерти. </li>
+			</ul>
+
+
+			<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">Сюжет</h3>
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>Изменена первая глава.</li>
+				<li>Исправлены ошибки в тексте сюжета.</li>
+				<li>Исправлена ошибка, из-за которой в некоторых местах, где игрок получает очки Пути, не появлялось уведомление об этом.</li>
+				<li>Добавлены Подсказки. Если в Настройках включить показ подсказок, то около кнопок выбора появятся иконки Путей, очки которых вы получите при том или ином выборе.</li>
+				</li>
+			</ul>
+
+
+			<h3 class="text-lg font-semibold text-zinc-400 mt-3 mb-1">Прочее</h3>
+
+			<ul class="list-disc pl-5 my-2 space-y-1">
+				<li>Исправлена ошибка, из-за которой игрок, сохранивший прогресс на английской локализации в версии 0.11.0, не мог загрузить сейв. В версии 0.12 и новее сохранения на английской локализации будут работать корректно.</li>
+				<li>
+					Исправлена ошибка, из-за которой при английской локализации некорректно отображалось название сейва.
+				</li>
+				<li>
+					Исправлена ошибка, из-за которой повторно вылезала кодовая панель в первой главе.
+				</li>
+			</ul>
+
+			<p class="mb-4">Обновление уже вышло. Устанавливайте новую версию на этом сайте в разделе <a href="https://asteridc.github.io/woollybunny-website/#download" target="_blank" rel="noopener noreferrer" class="text-red-600 underline hover:text-red-400 transition-colors font-medium">СКАЧАТЬ ДЕМО</a>.:
+		</p>
+
+			<p class="mb-4">Все основные изменения затронули именно русскую локализацию. Обновление для английской локализации выйдет позже. </p>
+
+
+
+			<p class="mb-4">
+				В планах снова масштабные нововведения. Следите за новостями на сайте и в <a href="https://t.me/woollybunnycomm" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline hover:text-amber-400 transition-colors font-medium">телеграм-сообществе</a>!
+			</p>
+		</div>
+		`
+		},
+		{
 		slug: 'the-new-vision-is-coming-soon',
 		badge: 'NEWS',
 		date: '20.06.2026',
@@ -1693,6 +2016,7 @@
                 "'": '&#039;'
             }[char]));
         }
+
 
         function getNewsSlug(index) {
             const data = newsData[index];

@@ -262,6 +262,8 @@
 
 		/* Utility */
 		.text-accent { color: var(--accent-blood); }
+		.text-dirty { color: var(--text-dirty); }
+		.text-offwhite-c { color: var(--text-offwhite); }
 		.border-accent { border-color: var(--accent-blood); }
 		.bg-ragged {
 		clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
@@ -369,6 +371,130 @@
 		::-webkit-scrollbar-thumb { background: #333; border: 2px solid #000; }
 		::-webkit-scrollbar-thumb:hover { background: var(--accent-blood); }
 
+		/* ===== News cards & Article view ===== */
+		.news-card { display: flex; }
+		.clamp-3 {
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+		.clamp-2 {
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		#articleView {
+			animation: articleFadeIn 0.25s ease;
+		}
+		@keyframes articleFadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
+		}
+
+		.related-card:hover img { filter: grayscale(0%); }
+
+		#articleMain img { max-width: 100%; }
+
+		.article-prose h1 { font-family: 'Oswald', sans-serif; letter-spacing: 1px; text-transform: none; }
+		.article-prose h2, .article-prose h3, .article-prose h4 {
+			font-family: 'Bebas Neue', sans-serif;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			color: #f0f0f0;
+		}
+		.article-prose img {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			border: 1px solid #333;
+		}
+		.article-hero {
+			aspect-ratio: 21 / 9;
+		}
+		.article-hero img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			filter: grayscale(25%) contrast(1.05);
+			transition: filter 0.4s ease, transform 0.5s ease;
+		}
+		.article-hero:hover img { filter: grayscale(0%) contrast(1); transform: scale(1.015); }
+		.article-sidebar-card {
+			background: rgba(22,22,22,0.92);
+		}
+		.recommended-news {
+			position: relative;
+			border: 1px solid #333;
+			background: #0b0b0b;
+			overflow: hidden;
+		}
+		.recommended-news::before {
+			content: '';
+			position: absolute;
+			inset: 0;
+			border: 1px solid rgba(170,17,17,.35);
+			pointer-events: none;
+			z-index: 2;
+		}
+		.recommended-news img {
+			width: 100%;
+			aspect-ratio: 21 / 9;
+			object-fit: cover;
+			filter: grayscale(45%) contrast(1.1);
+			transition: transform .45s ease, filter .35s ease;
+		}
+		.recommended-news:hover img {
+			transform: scale(1.04);
+			filter: grayscale(0%) contrast(1);
+		}
+		.article-copy {
+			font-family: 'Tektur', sans-serif;
+			font-size: 1.02rem;
+			line-height: 1.85;
+			color: #bdbdbd;
+		}
+		.article-copy p { margin: 0 0 1.35rem; }
+		.article-copy h1, .article-copy h2, .article-copy h3, .article-copy h4 {
+			margin-top: 2.5rem;
+			margin-bottom: 1rem;
+		}
+		.article-copy ul, .article-copy ol {
+			margin-bottom: 1.5rem;
+			line-height: 1.75;
+		}
+		@media (max-width: 767px) {
+			.article-hero { aspect-ratio: 16 / 9; }
+			.article-copy { font-size: .98rem; line-height: 1.75; }
+		}
+		.article-loading {
+			position: relative;
+			overflow: hidden;
+		}
+		.article-loading::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+			transform: translateX(-100%);
+			animation: articleLoadingSweep 1.2s infinite;
+		}
+		.article-loader {
+			width: 34px;
+			height: 34px;
+			border: 3px solid #333;
+			border-top-color: var(--accent-blood);
+			border-radius: 50%;
+			animation: articleLoaderSpin 0.8s linear infinite;
+		}
+		@keyframes articleLoaderSpin { to { transform: rotate(360deg); } }
+		@keyframes articleLoadingSweep { to { transform: translateX(100%); } }
+		@media (max-width: 1023px) {
+			#articleView > .max-w-7xl { padding-top: 2rem; padding-bottom: 3rem; }
+			.article-sidebar-card { position: static; }
+		}
 	</style>
 </head>
 <body class="antialiased selection:bg-red-900 selection:text-white">
@@ -755,6 +881,28 @@
             <div id="newsPagination" class="mt-10 flex flex-wrap items-center justify-center gap-3"></div>
         </div>
     </section>
+
+    <!-- ================= FULLSCREEN ARTICLE VIEW ================= -->
+	<div id="articleView" class="fixed inset-0 z-[200] bg-black hidden overflow-y-auto scratched-bg">
+		<div class="grain-overlay"></div>
+		<div class="vignette"></div>
+
+		<div class="sticky top-0 z-20 nav-bar">
+			<div class="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 py-4">
+				<button onclick="closeArticle()" class="nav-link !px-0 flex items-center gap-2">
+					<span>&larr;</span>
+					<span class="lang-en">Back to News</span>
+					<span class="lang-ru hidden">Назад к новостям</span>
+				</button>
+				<button onclick="closeArticle()" class="text-3xl leading-none text-gray-400 hover:text-accent transition" aria-label="Close">&times;</button>
+			</div>
+		</div>
+
+		<div class="max-w-7xl mx-auto px-4 md:px-8 py-10 md:py-16 grid lg:grid-cols-[1fr_340px] gap-12 items-start">
+			<article id="articleMain" class="relative min-w-0"></article>
+			<aside id="articleSidebar" class="lg:sticky lg:top-28 min-w-0"></aside>
+		</div>
+	</div>
 
     <!-- Team Section -->
     <section id="team" class="py-32 px-4 bg-[#111] relative scratched-bg">
@@ -1252,39 +1400,6 @@
         </div>
     </div>
 
-    <!-- ========== NEWS MODAL ========== -->
-    <div id="newsModal" class="fixed inset-0 z-[10001] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md" onclick="closeNewsModal(event)">
-        <div class="bg-[#111] w-full max-w-4xl relative shadow-2xl border border-gray-800 max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <!-- Tape top -->
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-48 h-10 bg-[#d4a017] rotate-1 z-20 shadow-lg"></div>
-            
-            <button class="absolute top-4 right-4 text-white text-4xl hover:text-red-500 z-30" onclick="closeNewsModal(event)">×</button>
-            
-            <div class="relative h-64 md:h-80 overflow-hidden">
-                <img id="modal-image" src="" alt="News Image" class="w-full h-full object-cover opacity-60">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#111] to-transparent"></div>
-                <div class="absolute bottom-6 left-6 md:left-10 z-10">
-                    <span id="modal-badge" class="bg-red-700 text-white text-xs font-bold px-3 py-1 mb-2 inline-block">UPDATE</span>
-                    <h2 id="modal-title" class="text-4xl md:text-5xl font-stencil text-white leading-none">TITLE</h2>
-                    <div id="modal-date" class="text-gray-400 font-mono text-sm mt-1">DATE</div>
-                    <button id="modal-copy-link" class="mt-4 inline-flex items-center gap-2 border border-red-900 bg-black/60 px-3 py-2 font-stencil text-sm uppercase tracking-widest text-gray-200 transition-colors hover:border-red-500 hover:text-white" onclick="copyCurrentNewsLink(event)">
-                        <span id="modal-copy-label">
-                            <span class="lang-en">Copy Link</span>
-                            <span class="lang-ru hidden">Скопировать ссылку</span>
-                        </span>
-                        <span id="modal-copied-label" class="hidden">
-                            <span class="lang-en">Copied</span>
-                            <span class="lang-ru hidden">Скопировано</span>
-                        </span>
-                    </button>
-                </div>
-            </div>
-            
-            <div id="modal-content" class="p-8 md:p-12 text-gray-300 leading-relaxed font-sans text-lg border-t-4 border-red-900">
-                <!-- Content here -->
-            </div>
-        </div>
-    </div>
 
 	<!-- ========== SCRIPTS ========== -->
 	<script>
@@ -2224,43 +2339,28 @@
 		}
 		];
 
-		const screenshots = [
-		'image_2025-12-21_02-21-36.png',
-		'image_2025-12-21_02-22-07.png',
-		'image_2025-12-21_02-22-40.png',
-		'image_2025-12-21_02-23-20.png',
-		'image_2025-12-21_02-23-58.png',
-		'image_2025-12-16_23-23-25.png'
-		];
+        // ===================== NEWS SYSTEM =====================
+        // Все новости хранятся выше в массиве newsData.
+        // Страница новости открывается через hash: #news/slug
+        // Это позволяет делиться прямой ссылкой и пользоваться кнопкой Back браузера.
+        const state = {
+            lang: 'en',
+            page: 1,
+            pageSize: 4,
+        };
 
-		// Mobile Menu
-		document.getElementById('mobileMenuBtn').addEventListener('click', () => {
-		document.getElementById('mobileMenu').classList.toggle('hidden');
-		});
+        let currentSlug = null;
+        let copyFeedbackTimer = null;
 
-		// News Modal Logic
-		const newsModal = document.getElementById('newsModal');
-		const newsList = document.getElementById('newsList');
-		const newsPagination = document.getElementById('newsPagination');
-		const newsSection = document.getElementById('news');
-		const NEWS_ITEMS_PER_PAGE = 4;
-		const modalElements = {
-		badge: document.getElementById('modal-badge'),
-		date: document.getElementById('modal-date'),
-		title: document.getElementById('modal-title'),
-		content: document.getElementById('modal-content'),
-		image: document.getElementById('modal-image'),
-		copyLabel: document.getElementById('modal-copy-label'),
-		copiedLabel: document.getElementById('modal-copied-label')
-		};
+        const newsListEl = document.getElementById('newsList');
+        const paginationEl = document.getElementById('newsPagination');
+        const articleViewEl = document.getElementById('articleView');
+        const articleMainEl = document.getElementById('articleMain');
+        const articleSidebarEl = document.getElementById('articleSidebar');
 
-		let currentLanguage = 'en';
-		let currentNewsPage = 1;
-		let currentNewsIndex = null;
-		let copyFeedbackTimer = null;
-
-		function escapeHtml(value) {
-		return String(value).replace(/[&<>"']/g, (char) => ({
+        // ---------- HELPERS ----------
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
                 '&': '&amp;',
                 '<': '&lt;',
                 '>': '&gt;',
@@ -2269,23 +2369,59 @@
             }[char]));
         }
 
-
-        function getNewsSlug(index) {
-            const data = newsData[index];
-            if (!data) return '';
-            if (data.slug) return data.slug;
-            const fallback = `${data.date || ''} ${data.title || ''}`.toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-            return fallback || `news-${index + 1}`;
+        function badgeColor(badge) {
+            switch (String(badge || '').toUpperCase()) {
+                case 'UPDATE': return '#b48a14';
+                case 'RELEASE': return '#0d7a44';
+                case 'BUGFIX': return '#4a4a4a';
+                case 'NEWS': return '#9d1010';
+                default: return '#9d1010';
+            }
         }
 
-        function getNewsHash(index) {
-            return `#news/${getNewsSlug(index)}`;
+        function parseNewsDate(value) {
+            if (!value) return 0;
+
+            const text = String(value).trim();
+            const ruDate = text.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+            if (ruDate) {
+                const [, day, month, year] = ruDate;
+                return new Date(Number(year), Number(month) - 1, Number(day)).getTime();
+            }
+
+            const time = Date.parse(text);
+            return Number.isNaN(time) ? 0 : time;
         }
 
-        function getNewsUrl(index) {
-            return `${window.location.href.split('#')[0]}${getNewsHash(index)}`;
+        function shuffle(items) {
+            const result = items.slice();
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+            return result;
+        }
+
+        function applyLangVisibility(root = document) {
+            root.querySelectorAll('.lang-en').forEach(el => {
+                el.classList.toggle('hidden', state.lang !== 'en');
+            });
+            root.querySelectorAll('.lang-ru').forEach(el => {
+                el.classList.toggle('hidden', state.lang !== 'ru');
+            });
+        }
+
+        function getNewsIndexBySlug(slug) {
+            return newsData.findIndex(item => item.slug === slug);
+        }
+
+        function getNewsBySlug(slug) {
+            const index = getNewsIndexBySlug(slug);
+            return index === -1 ? null : newsData[index];
+        }
+
+        function getNewsHash(slug) {
+            return `#news/${encodeURIComponent(slug)}`;
         }
 
         function getNewsPageHash(page) {
@@ -2293,7 +2429,7 @@
         }
 
         function getTotalNewsPages() {
-            return Math.max(1, Math.ceil(newsData.length / NEWS_ITEMS_PER_PAGE));
+            return Math.max(1, Math.ceil(newsData.length / state.pageSize));
         }
 
         function clampNewsPage(page) {
@@ -2302,17 +2438,17 @@
             return Math.min(Math.max(parsed, 1), getTotalNewsPages());
         }
 
-        function getNewsPageForIndex(index) {
-            return Math.floor(index / NEWS_ITEMS_PER_PAGE) + 1;
-        }
-
-        function findNewsIndexBySlug(slug) {
-            return newsData.findIndex((_, index) => getNewsSlug(index).toLowerCase() === slug.toLowerCase());
+        function getNewsPageForSlug(slug) {
+            const index = getNewsIndexBySlug(slug);
+            return index === -1 ? 1 : Math.floor(index / state.pageSize) + 1;
         }
 
         function parseNewsRoute() {
             const hash = decodeURIComponent(window.location.hash || '');
-            if (hash === '#news') return { type: 'section' };
+
+            if (hash === '#news' || hash === '') {
+                return { type: hash === '#news' ? 'section' : 'none' };
+            }
 
             const pageMatch = hash.match(/^#news\/page\/(\d+)$/);
             if (pageMatch) {
@@ -2321,133 +2457,206 @@
 
             const articleMatch = hash.match(/^#news\/([^/?#]+)$/);
             if (articleMatch) {
-                const index = findNewsIndexBySlug(articleMatch[1]);
-                if (index !== -1) return { type: 'article', index };
+                const slug = articleMatch[1];
+                if (getNewsBySlug(slug)) {
+                    return { type: 'article', slug };
+                }
             }
 
-            return null;
+            return { type: 'unknown' };
         }
 
-        function getNewsBadgeColor(badge) {
-            switch (String(badge).toUpperCase()) {
-                case 'NEWS': return '#16a34a';
-                case 'BUGFIX': return '#4b5563';
-                default: return '#dc2626';
-            }
-        }
-
-        function renderNewsCard(data, index) {
-            const titleRu = data.titleRu || data.title;
-            const excerptEn = data.excerptEn || '';
-            const excerptRu = data.excerptRu || excerptEn;
+        // ---------- NEWS CARDS ----------
+        function cardTemplate(item) {
+            const title = state.lang === 'ru' ? (item.titleRu || item.title) : item.title;
+            const excerpt = state.lang === 'ru' ? (item.excerptRu || item.excerptEn || '') : (item.excerptEn || '');
+            const readMore = state.lang === 'ru' ? 'Читать полностью' : 'Read Full Report';
 
             return `
-                <a href="${getNewsHash(index)}" class="grunge-card group flex flex-col md:flex-row gap-6 p-0 bg-[#0d0d0d] overflow-hidden border-0 text-left no-underline focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 focus:ring-offset-black" onclick="openNewsModal(${index}, true, event)" aria-label="${escapeHtml(data.title)}">
-                    <div class="md:w-1/3 min-h-56 md:min-h-0 relative overflow-hidden">
-                        <img src="${escapeHtml(data.image)}" alt="${escapeHtml(data.title)}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">
-                        <div class="absolute top-0 left-0 text-white font-bold text-xs px-2 py-1" style="background-color: ${getNewsBadgeColor(data.badge)}">${escapeHtml(data.badge)}</div>
+                <article class="news-card group grunge-card cursor-pointer flex flex-col md:flex-row gap-6 overflow-hidden"
+                    onclick="openArticle('${escapeHtml(item.slug)}')">
+                    <div class="relative w-full md:w-72 flex-shrink-0 overflow-hidden bg-black">
+                        <span class="news-badge" style="background:${badgeColor(item.badge)};">${escapeHtml(item.badge)}</span>
+                        <img src="${escapeHtml(item.image)}"
+                             alt="${escapeHtml(title)}"
+                             class="w-full h-48 md:h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition duration-500"
+                             onerror="this.style.display='none'">
                     </div>
-                    <div class="p-6 flex flex-col justify-center flex-1">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2 border-b border-gray-800 pb-2">
-                            <div>
-                                <h3 class="lang-en text-2xl text-white group-hover:text-red-500 transition-colors">${escapeHtml(data.title)}</h3>
-                                <h3 class="lang-ru hidden text-2xl text-white group-hover:text-red-500 transition-colors">${escapeHtml(titleRu)}</h3>
-                            </div>
-                            <span class="font-mono text-xs text-gray-500 shrink-0">${escapeHtml(data.date)}</span>
-                        </div>
-                        <p class="text-gray-400 mb-4 font-mono text-sm">
-                            <span class="lang-en">${escapeHtml(excerptEn)}</span>
-                            <span class="lang-ru hidden">${escapeHtml(excerptRu)}</span>
-                        </p>
-                        <span class="text-red-600 text-sm font-bold uppercase tracking-wider group-hover:translate-x-2 transition-transform inline-block">
-                            <span class="lang-en">Read Full Log -></span>
-                            <span class="lang-ru hidden">Читать журнал -></span>
+                    <div class="flex-1 py-2 pr-2 md:pr-6 flex flex-col justify-center">
+                        <div class="font-hand text-xs text-accent uppercase tracking-widest mb-2">${escapeHtml(item.date)}</div>
+                        <h3 class="font-oswald text-2xl md:text-3xl text-white mb-3 group-hover:text-accent transition">${escapeHtml(title)}</h3>
+                        <p class="text-dirty text-sm md:text-base leading-relaxed mb-4 clamp-3">${escapeHtml(excerpt)}</p>
+                        <span class="font-stencil text-xs text-white inline-flex items-center gap-2 group-hover:gap-4 transition-all">
+                            ${readMore} <span>&rarr;</span>
                         </span>
                     </div>
-                </a>
-            `;
+                </article>`;
         }
 
-        function renderNewsPaginationButton(page, label, isDisabled = false, isCurrent = false) {
-            const baseClass = 'px-4 py-2 border font-stencil text-xl transition-colors';
-            const activeClass = isCurrent
-                ? 'bg-red-800 border-red-600 text-white'
-                : 'text-gray-400 border-gray-700 hover:text-white hover:border-red-600';
-            const disabledClass = 'text-gray-700 border-gray-800 cursor-not-allowed';
-
-            if (isDisabled) {
-                return `<span class="${baseClass} ${disabledClass}" aria-disabled="true">${label}</span>`;
-            }
-
-            return `<a href="${getNewsPageHash(page)}" class="${baseClass} ${activeClass}" onclick="changeNewsPage(${page}, event)"${isCurrent ? ' aria-current="page"' : ''}>${label}</a>`;
+        function renderNewsList() {
+            state.page = clampNewsPage(state.page);
+            const start = (state.page - 1) * state.pageSize;
+            const items = newsData.slice(start, start + state.pageSize);
+            newsListEl.innerHTML = items.map(cardTemplate).join('');
+            renderPagination();
+            applyLangVisibility(newsListEl);
         }
 
-        function renderNewsPagination() {
+        function renderPagination() {
             const totalPages = getTotalNewsPages();
             if (totalPages <= 1) {
-                newsPagination.innerHTML = '';
+                paginationEl.innerHTML = '';
                 return;
             }
 
-            const buttons = [
-                renderNewsPaginationButton(
-                    currentNewsPage - 1,
-                    '<span class="lang-en">Prev</span><span class="lang-ru hidden">Назад</span>',
-                    currentNewsPage === 1
-                )
-            ];
+            const prevLabel = state.lang === 'ru' ? '‹ НАЗАД' : '‹ PREV';
+            const nextLabel = state.lang === 'ru' ? 'ВПЕРЁД ›' : 'NEXT ›';
+            let html = `
+                <button onclick="changePage(${state.page - 1})"
+                    ${state.page === 1 ? 'disabled' : ''}
+                    class="btn-outline !text-sm !py-2 !px-4 ${state.page === 1 ? 'opacity-30 cursor-not-allowed' : ''}">
+                    ${prevLabel}
+                </button>`;
 
             for (let page = 1; page <= totalPages; page++) {
-                buttons.push(renderNewsPaginationButton(page, page, false, page === currentNewsPage));
+                html += `
+                    <button onclick="changePage(${page})"
+                        class="w-10 h-10 font-oswald border ${state.page === page
+                            ? 'bg-red-800 border-red-800 text-white'
+                            : 'border-gray-700 text-gray-400 hover:border-white hover:text-white'} transition">
+                        ${page}
+                    </button>`;
             }
 
-            buttons.push(renderNewsPaginationButton(
-                currentNewsPage + 1,
-                '<span class="lang-en">Next</span><span class="lang-ru hidden">Вперёд</span>',
-                currentNewsPage === totalPages
-            ));
+            html += `
+                <button onclick="changePage(${state.page + 1})"
+                    ${state.page === totalPages ? 'disabled' : ''}
+                    class="btn-outline !text-sm !py-2 !px-4 ${state.page === totalPages ? 'opacity-30 cursor-not-allowed' : ''}">
+                    ${nextLabel}
+                </button>`;
 
-            newsPagination.innerHTML = buttons.join('');
+            paginationEl.innerHTML = html;
         }
 
-        function renderNewsPage(page = 1) {
-            currentNewsPage = clampNewsPage(page);
-            const startIndex = (currentNewsPage - 1) * NEWS_ITEMS_PER_PAGE;
-            const pageItems = newsData.slice(startIndex, startIndex + NEWS_ITEMS_PER_PAGE);
-
-            newsList.innerHTML = pageItems.map((data, offset) => renderNewsCard(data, startIndex + offset)).join('');
-            renderNewsPagination();
-            setLang(currentLanguage);
-        }
-
-        function changeNewsPage(page, e) {
-            if (e) e.preventDefault();
+        function changePage(page) {
             const nextPage = clampNewsPage(page);
-            renderNewsPage(nextPage);
+            if (nextPage === state.page) return;
+
+            state.page = nextPage;
+            renderNewsList();
             history.pushState(null, '', getNewsPageHash(nextPage));
-            hideNewsModal();
-            newsSection.scrollIntoView({ block: 'start' });
+            document.getElementById('news').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        function getInitialNewsPage() {
-            const route = parseNewsRoute();
-            if (route && route.type === 'article') return getNewsPageForIndex(route.index);
-            if (route && route.type === 'page') return route.page;
-            return 1;
+        // ---------- FULLSCREEN ARTICLE ----------
+        function showArticleLoading() {
+            articleMainEl.innerHTML = `
+                <div class="article-loading min-h-[60vh] flex flex-col items-center justify-center border border-gray-800 bg-black/40">
+                    <div class="article-loader" aria-hidden="true"></div>
+                    <div class="font-stencil text-sm text-gray-500 mt-5 tracking-[0.25em]">
+                        <span class="lang-en">LOADING INTEL</span>
+                        <span class="lang-ru hidden">ЗАГРУЗКА ДАННЫХ</span>
+                    </div>
+                </div>`;
+            articleSidebarEl.innerHTML = '';
+            applyLangVisibility(articleViewEl);
         }
 
-        function resetCopyFeedback() {
-            window.clearTimeout(copyFeedbackTimer);
-            modalElements.copyLabel.classList.remove('hidden');
-            modalElements.copiedLabel.classList.add('hidden');
+        function renderArticleMain(item) {
+            const title = state.lang === 'ru' ? (item.titleRu || item.title) : item.title;
+            const copyLabel = state.lang === 'ru' ? 'Скопировать ссылку' : 'Copy link';
+            const readingLabel = state.lang === 'ru' ? 'Чтение' : 'Reading';
+            const closeLabel = state.lang === 'ru' ? 'Назад к новостям' : 'Back to news';
+
+            articleMainEl.innerHTML = `
+                <div class="relative mb-7 border-2 border-gray-800 bg-black overflow-hidden article-hero">
+                    <div class="tape-strip"></div>
+                    <span class="news-badge" style="background:${badgeColor(item.badge)};">${escapeHtml(item.badge)}</span>
+                    <img src="${escapeHtml(item.image)}"
+                         alt="${escapeHtml(title)}"
+                         onerror="this.style.display='none'">
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+                    <div class="flex items-center gap-4">
+                        <div class="font-hand text-accent text-sm uppercase tracking-widest">${escapeHtml(item.date)}</div>
+                        <span class="text-gray-700">/</span>
+                        <div class="font-hand text-gray-600 text-xs uppercase tracking-widest">${readingLabel}</div>
+                    </div>
+                    <button type="button"
+                            onclick="copyCurrentArticleLink(event)"
+                            class="article-copy-link font-stencil text-xs uppercase tracking-widest border border-gray-700 bg-black px-3 py-2 text-gray-300 hover:text-white hover:border-red-700 transition">
+                        ${copyLabel}
+                    </button>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl text-white mb-7 leading-[0.98]">${escapeHtml(title)}</h1>
+
+                <div class="article-copy border-t border-gray-800 pt-8">
+                    ${item.content || ''}
+                </div>`;
+
+            applyLangVisibility(articleMainEl);
         }
 
-        function showCopyFeedback() {
-            resetCopyFeedback();
-            modalElements.copyLabel.classList.add('hidden');
-            modalElements.copiedLabel.classList.remove('hidden');
-            setLang(currentLanguage);
-            copyFeedbackTimer = window.setTimeout(resetCopyFeedback, 1600);
+        function getRecommendedNews(item) {
+            if (!item || newsData.length <= 1) return null;
+
+            const sorted = [...newsData].sort((a, b) => parseNewsDate(b.date) - parseNewsDate(a.date));
+            const currentIndex = sorted.findIndex(news => news.slug === item.slug);
+
+            // Показываем ближайшую более старую новость. Для самой старой
+            // новости делаем fallback на самую новую, чтобы рекомендация всегда была.
+            if (currentIndex >= 0 && currentIndex < sorted.length - 1) {
+                return sorted[currentIndex + 1];
+            }
+
+            return sorted[0];
+        }
+
+        function renderSidebar(item) {
+            const recommended = getRecommendedNews(item);
+            const heading = state.lang === 'ru' ? 'Узнать больше' : 'Learn more';
+            const previousLabel = state.lang === 'ru' ? 'Предыдущая новость' : 'Earlier report';
+            const readLabel = state.lang === 'ru' ? 'Открыть новость' : 'Open report';
+            const recommendedTitle = recommended
+                ? (state.lang === 'ru' ? (recommended.titleRu || recommended.title) : recommended.title)
+                : '';
+
+            const recommendationHtml = recommended ? `
+                <button type="button"
+                    class="recommended-news w-full text-left cursor-pointer group"
+                    onclick="openArticle('${escapeHtml(recommended.slug)}')">
+                    <div class="relative overflow-hidden">
+                        <img src="${escapeHtml(recommended.image)}"
+                             alt="${escapeHtml(recommendedTitle)}"
+                             onerror="this.style.display='none'">
+                        <span class="news-badge" style="background:${badgeColor(recommended.badge)};">${escapeHtml(recommended.badge)}</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="font-hand text-xs text-accent uppercase tracking-widest mb-2">${escapeHtml(recommended.date)}</div>
+                        <div class="font-oswald text-xl md:text-2xl text-white leading-tight group-hover:text-accent transition">
+                            ${escapeHtml(recommendedTitle)}
+                        </div>
+                        <div class="mt-5 font-stencil text-xs text-gray-400 group-hover:text-white transition flex items-center gap-2">
+                            ${readLabel} <span class="group-hover:translate-x-1 transition-transform">→</span>
+                        </div>
+                    </div>
+                </button>` : `
+                <div class="text-sm text-gray-600 font-hand uppercase tracking-widest">
+                    ${state.lang === 'ru' ? 'Других новостей пока нет' : 'No other reports yet'}
+                </div>`;
+
+            articleSidebarEl.innerHTML = `
+                <div class="article-sidebar-card">
+                    <div class="mb-5">
+                        <div class="font-hand text-[10px] text-accent tracking-[0.28em] uppercase mb-2">${previousLabel}</div>
+                        <h4 class="font-stencil text-2xl text-white">${heading}</h4>
+                    </div>
+                    ${recommendationHtml}
+                </div>`;
+
+            applyLangVisibility(articleSidebarEl);
         }
 
         function copyText(text) {
@@ -2456,111 +2665,162 @@
             }
 
             return new Promise((resolve, reject) => {
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.setAttribute('readonly', '');
-                textArea.style.position = 'fixed';
-                textArea.style.opacity = '0';
-                document.body.appendChild(textArea);
-                textArea.select();
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.setAttribute('readonly', '');
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
 
                 try {
                     const copied = document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    copied ? resolve() : reject(new Error('Copy command failed'));
+                    textarea.remove();
+                    copied ? resolve() : reject(new Error('Copy failed'));
                 } catch (error) {
-                    document.body.removeChild(textArea);
+                    textarea.remove();
                     reject(error);
                 }
             });
         }
 
-        async function copyCurrentNewsLink(e) {
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
+        async function copyCurrentArticleLink(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
             }
-            if (currentNewsIndex === null) return;
 
-            const link = getNewsUrl(currentNewsIndex);
+            if (!currentSlug) return;
+            const url = `${window.location.href.split('#')[0]}${getNewsHash(currentSlug)}`;
+
             try {
-                await copyText(link);
-                showCopyFeedback();
+                await copyText(url);
+                const button = articleMainEl.querySelector('.article-copy-link');
+                if (!button) return;
+
+                button.textContent = state.lang === 'ru' ? 'СКОПИРОВАНО' : 'COPIED';
+                clearTimeout(copyFeedbackTimer);
+                copyFeedbackTimer = setTimeout(() => {
+                    button.textContent = state.lang === 'ru' ? 'Скопировать ссылку' : 'Copy Link';
+                }, 1600);
             } catch (error) {
-                window.prompt(currentLanguage === 'ru' ? 'Ссылка на новость:' : 'News link:', link);
+                window.prompt(state.lang === 'ru' ? 'Ссылка на новость:' : 'News link:', url);
             }
         }
 
-        function openNewsModal(index, shouldUpdateUrl = false, e = null) {
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            const data = newsData[index];
-            if (!data) return;
-            currentNewsIndex = index;
-
-            const targetPage = getNewsPageForIndex(index);
-            if (currentNewsPage !== targetPage) {
-                renderNewsPage(targetPage);
-            }
-
-            modalElements.badge.innerText = data.badge;
-            modalElements.date.innerText = data.date;
-            modalElements.title.innerHTML = `
-                <span class="lang-en">${escapeHtml(data.title)}</span>
-                <span class="lang-ru hidden">${escapeHtml(data.titleRu || data.title)}</span>
-            `;
-            modalElements.content.innerHTML = data.content;
-            modalElements.image.src = data.image;
-            modalElements.image.alt = data.title;
-            modalElements.badge.style.backgroundColor = getNewsBadgeColor(data.badge);
-            resetCopyFeedback();
-
-            if (shouldUpdateUrl && window.location.hash !== getNewsHash(index)) {
-                history.pushState(null, '', getNewsHash(index));
-            }
-            
-            newsModal.classList.remove('hidden');
+        function showArticle(item) {
+            currentSlug = item.slug;
+            articleViewEl.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            articleViewEl.scrollTop = 0;
 
-            // Re-apply language visibility inside modal content
-            setLang(currentLanguage);
+            // Сначала показываем загрузчик, затем отрисовываем сам материал.
+            showArticleLoading();
+            window.requestAnimationFrame(() => {
+                renderArticleMain(item);
+                renderSidebar(item);
+                applyLangVisibility(articleViewEl);
+                articleViewEl.scrollTop = 0;
+            });
         }
 
-        function hideNewsModal() {
-            newsModal.classList.add('hidden');
+        function hideArticle() {
+            currentSlug = null;
+            articleViewEl.classList.add('hidden');
             document.body.style.overflow = '';
-            currentNewsIndex = null;
-            resetCopyFeedback();
+            clearTimeout(copyFeedbackTimer);
         }
 
-        function closeNewsModal(e) {
-            if (e && e.stopPropagation) e.stopPropagation();
-            const route = parseNewsRoute();
-            hideNewsModal();
+        function openArticle(slug) {
+            if (!getNewsBySlug(slug)) return;
+            window.location.hash = getNewsHash(slug).slice(1);
+        }
 
-            if (route && route.type === 'article') {
-                history.replaceState(null, '', getNewsPageHash(currentNewsPage));
+        function closeArticle() {
+            if (window.location.hash) {
+                history.pushState(null, '', getNewsPageHash(state.page));
             }
+            hideArticle();
+            renderNewsList();
+            document.getElementById('news').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function handleNewsRoute() {
             const route = parseNewsRoute();
 
-            if (route && route.type === 'article') {
-                openNewsModal(route.index, false);
+            if (route.type === 'article') {
+                const item = getNewsBySlug(route.slug);
+                state.page = getNewsPageForSlug(route.slug);
+                showArticle(item);
                 return;
             }
 
-            if (route && route.type === 'page') {
-                renderNewsPage(route.page);
-            } else if (route && route.type === 'section') {
-                renderNewsPage(1);
+            hideArticle();
+
+            if (route.type === 'page') {
+                state.page = route.page;
+                renderNewsList();
+                return;
             }
 
-            hideNewsModal();
+            if (route.type === 'section') {
+                state.page = 1;
+                renderNewsList();
+            }
         }
+
+        // ---------- LANGUAGE ----------
+        function toggleLang() {
+            setLang(state.lang === 'en' ? 'ru' : 'en');
+        }
+
+        function setLang(lang) {
+            if (lang !== 'en' && lang !== 'ru') return;
+            state.lang = lang;
+            localStorage.setItem('woollyBunnyLang', lang);
+
+            applyLangVisibility(document);
+            renderNewsList();
+
+            if (currentSlug) {
+                const item = getNewsBySlug(currentSlug);
+                if (item && !articleViewEl.classList.contains('hidden')) {
+                    renderArticleMain(item);
+                    renderSidebar(item);
+                }
+            }
+
+            const label = document.getElementById('currentLangLabel');
+            if (label) label.innerText = lang.toUpperCase();
+
+            const menu = document.getElementById('langMenu');
+            if (menu) menu.classList.add('hidden');
+        }
+
+        function getInitialLanguage() {
+            const saved = localStorage.getItem('woollyBunnyLang');
+            if (saved === 'ru' || saved === 'en') return saved;
+            return (navigator.language || '').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+        }
+
+        // ---------- INIT ----------
+        document.addEventListener('DOMContentLoaded', () => {
+            state.lang = getInitialLanguage();
+            applyLangVisibility(document);
+            renderNewsList();
+            handleNewsRoute();
+
+            const label = document.getElementById('currentLangLabel');
+            if (label) label.innerText = state.lang.toUpperCase();
+        });
+
+        window.addEventListener('hashchange', handleNewsRoute);
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !articleViewEl.classList.contains('hidden')) {
+                closeArticle();
+            }
+        });
 
         // Lightbox Logic
         const lightbox = document.getElementById('lightbox');
@@ -2601,9 +2861,12 @@
         // Keyboard Support
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                closeLightbox({target: lightbox});
-                closeNewsModal();
+                if (!lightbox.classList.contains('hidden')) {
+                    closeLightbox({target: lightbox});
+                }
+                return;
             }
+
             if (!lightbox.classList.contains('hidden')) {
                 if (e.key === 'ArrowLeft') changeSlide(-1);
                 if (e.key === 'ArrowRight') changeSlide(1);
@@ -2628,37 +2891,6 @@
             }
         });
 
-        function setLang(lang) {
-            currentLanguage = lang;
-            
-            // СОХРАНЯЕМ ВЫБОР ПОЛЬЗОВАТЕЛЯ В ПАМЯТЬ БРАУЗЕРА
-            localStorage.setItem('woollyBunnyLang', lang);
-            
-            // Toggle Content Visibility
-            document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
-            document.querySelectorAll('.lang-ru').forEach(el => el.classList.toggle('hidden', lang !== 'ru'));
-            
-            // Update Dropdown Label
-            const label = document.getElementById('currentLangLabel');
-            if(label) label.innerText = lang.toUpperCase();
-
-            // Close Menu
-            const menu = document.getElementById('langMenu');
-            if(menu) menu.classList.add('hidden');
-        }
-		
-		function getInitialLanguage() {
-            const savedLang = localStorage.getItem('woollyBunnyLang');
-            if (savedLang) return savedLang;
-
-            const browserLang = navigator.language || navigator.userLanguage;
-            if (browserLang.toLowerCase().startsWith('ru')) {
-                return 'ru';
-            }
-
-            return 'en'; 
-        }
-        
 
 
 
@@ -2905,24 +3137,21 @@ function loadAndMergeCustomNews() {
     newsData.unshift(...formattedNews);
 }
 
-// Запускаем слияние до инициализации сайта
-loadAndMergeCustomNews();
+// Добавляем кнопки редактирования/удаления в существующие карточки администратора.
+const originalCardTemplate = cardTemplate;
+cardTemplate = function(data) {
+    let cardHtml = originalCardTemplate(data);
 
-// Модифицируем оригинальную функцию карточки, чтобы добавить кнопки ред./уд. только для админа
-const originalRenderNewsCard = renderNewsCard;
-renderNewsCard = function(data, index) {
-    let cardHtml = originalRenderNewsCard(data, index);
-    
     if (isAdminMode && data.isCustom) {
         const adminButtonsHtml = `
-            <div class="mt-4 flex gap-2 pt-3 text-xs font-mono relative z-10 border-t border-gray-800" onclick="event.preventDefault(); event.stopPropagation();">
-                <button onclick="openEditorModal('${data.id}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer">Редактировать</button>
-                <button onclick="deleteNews('${data.id}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-500 hover:text-white rounded transition-all cursor-pointer">Удалить</button>
-            </div>
-        `;
-        // Безопасно встраиваем кнопки внутрь карточки перед закрывающим тегом
-        cardHtml = cardHtml.replace(/(<\/div>\s*<\/a>)/, adminButtonsHtml + '$1');
+            <div class="mt-4 flex gap-2 pt-3 text-xs font-mono relative z-20 border-t border-gray-800" onclick="event.stopPropagation();">
+                <button onclick="openEditorModal('${escapeHtml(data.id)}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer">Редактировать</button>
+                <button onclick="deleteNews('${escapeHtml(data.id)}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-500 hover:text-white rounded transition-all cursor-pointer">Удалить</button>
+            </div>`;
+
+        cardHtml = cardHtml.replace('\n                    </div>\n                </article>', '\n                    ' + adminButtonsHtml + '\n                    </div>\n                </article>');
     }
+
     return cardHtml;
 };
 
@@ -3003,12 +3232,10 @@ function closeEditorModal() {
 }
 		
 // Initialize Default
-        const startLang = getInitialLanguage();
-		updateAdminUI();
-        renderNewsPage(getInitialNewsPage());
-        setLang(startLang);
+        loadAndMergeCustomNews();
+        updateAdminUI();
+        setLang(getInitialLanguage());
         handleNewsRoute();
-        window.addEventListener('hashchange', handleNewsRoute);
     </script>
 </body>
 </html>

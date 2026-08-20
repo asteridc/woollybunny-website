@@ -1283,7 +1283,7 @@
     </footer>
 
 	<!-- ========== MODAL: ADMIN AUTH ========== -->
-	<div id="authModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+	<div id="authModal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 		<div class="bg-zinc-950 border border-zinc-800 p-6 rounded-lg max-w-sm w-full shadow-2xl shadow-black">
 			<h3 class="text-xl font-bold text-amber-500 mb-4 font-mono uppercase tracking-wider">Доступ к терминалу</h3>
 			<input type="password" id="adminPasswordInput" placeholder="Введите пароль..." class="w-full bg-zinc-900 border border-zinc-700 text-white px-3 py-2 rounded mb-4 focus:outline-none focus:border-amber-500 font-mono text-sm">
@@ -1295,7 +1295,7 @@
 	</div>
 
 	<!-- ========== MODAL: NEWS EDITOR ========== -->
-	<div id="editorModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+	<div id="editorModal" class="hidden fixed inset-0 z-[1000] bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
 		<div class="bg-zinc-950 border border-zinc-800 p-6 rounded-lg max-w-4xl w-full shadow-2xl shadow-black my-8">
 			<h3 id="editorModalTitle" class="text-2xl font-bold text-amber-500 mb-6 font-mono uppercase tracking-wider border-b border-zinc-800 pb-3">Создание новости</h3>
 
@@ -2497,9 +2497,14 @@
             state.page = clampNewsPage(state.page);
             const start = (state.page - 1) * state.pageSize;
             const items = newsData.slice(start, start + state.pageSize);
+
             newsListEl.innerHTML = items.map(cardTemplate).join('');
+
+            // Рендер списка полностью перезаписывает #newsList, поэтому
+            // админские элементы нужно синхронизировать ПОСЛЕ каждого рендера.
             renderPagination();
             applyLangVisibility(newsListEl);
+            syncAdminControls();
         }
 
         function renderPagination() {
@@ -2896,53 +2901,112 @@
 
 // ========== ADMIN PANEL CONFIG & LOGIC ==========
 const ADMIN_PASSWORD = "7182";
-// Проверка состояния админа при загрузке
-let isAdminMode = localStorage.getItem('wbAdminActive') === 'true';
+const ADMIN_STORAGE_KEY = 'wbAdminActive';
+const CUSTOM_NEWS_STORAGE_KEY = 'wbCustomNews';
+
+// Проверяем состояние админской сессии при загрузке.
+let isAdminMode = localStorage.getItem(ADMIN_STORAGE_KEY) === 'true';
 
 function updateAdminUI() {
     const loginBtn = document.getElementById('adminLoginBtn');
     const logoutBtn = document.getElementById('adminLogoutBtn');
-    
+
     if (isAdminMode) {
-        if(loginBtn) loginBtn.classList.add('hidden');
-        if(logoutBtn) logoutBtn.classList.remove('hidden');
-        injectAdminControls();
+        if (loginBtn) loginBtn.classList.add('hidden');
+        if (logoutBtn) logoutBtn.classList.remove('hidden');
     } else {
-        if(loginBtn) loginBtn.classList.remove('hidden');
-        if(logoutBtn) logoutBtn.classList.add('hidden');
-        removeAdminControls();
+        if (loginBtn) loginBtn.classList.remove('hidden');
+        if (logoutBtn) logoutBtn.classList.add('hidden');
+    }
+
+    // Важно: список новостей может быть уже отрендерен или ещё нет.
+    // syncAdminControls безопасно обрабатывает оба случая.
+    syncAdminControls();
+    if (typeof renderNewsList === 'function' && newsListEl) {
+        renderNewsList();
     }
 }
 
 // Окна входа
-function openAdminModal() { document.getElementById('authModal').classList.remove('hidden'); }
-function closeAdminModal() { document.getElementById('authModal').classList.add('hidden'); document.getElementById('adminPasswordInput').value = ''; }
+function openAdminModal() {
+    const modal = document.getElementById('authModal');
+    const input = document.getElementById('adminPasswordInput');
 
-function checkAdminPassword() {
-    const input = document.getElementById('adminPasswordInput').value;
-    if (input === ADMIN_PASSWORD) {
-        localStorage.setItem('wbAdminActive', 'true');
-        alert('Доступ разрешен. Перезагрузка системы...');
-        location.reload();
-    } else {
-        alert('Ошибка доступа: Неверный пароль.');
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+    if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 0);
     }
 }
 
-function logoutAdmin() {
-    localStorage.removeItem('wbAdminActive');
-    alert('Сессия завершена. Перезагрузка...');
-    location.reload();
+function closeAdminModal() {
+    const modal = document.getElementById('authModal');
+    const input = document.getElementById('adminPasswordInput');
+
+    if (modal) modal.classList.add('hidden');
+    if (input) input.value = '';
 }
+
+function checkAdminPassword() {
+    const input = document.getElementById('adminPasswordInput');
+    const password = input ? input.value : '';
+
+    if (password !== ADMIN_PASSWORD) {
+        alert('Ошибка доступа: Неверный пароль.');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+        return;
+    }
+
+    localStorage.setItem(ADMIN_STORAGE_KEY, 'true');
+    isAdminMode = true;
+
+    closeAdminModal();
+    updateAdminUI();
+
+    alert('Доступ разрешен.');
+}
+
+function logoutAdmin() {
+    localStorage.removeItem(ADMIN_STORAGE_KEY);
+    isAdminMode = false;
+
+    closeEditorModal();
+    closeAdminModal();
+    updateAdminUI();
+
+    alert('Сессия завершена.');
+}
+
+// Enter в окне авторизации
+document.addEventListener('keydown', event => {
+    const modal = document.getElementById('authModal');
+    if (!modal || modal.classList.contains('hidden')) return;
+
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        checkAdminPassword();
+    }
+
+    if (event.key === 'Escape') {
+        closeAdminModal();
+    }
+});
 
 // Визуальный редактор тегов
 function insertTag(textareaId, tag) {
     const textarea = document.getElementById(textareaId);
+    if (!textarea) return;
+
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const text = textarea.value;
     const selectedText = text.substring(start, end);
-    
+
     let replacement = "";
     if (tag === 'red') {
         replacement = `<span class="text-red-500 font-semibold">${selectedText || 'красный текст'}</span>`;
@@ -2965,54 +3029,78 @@ function insertTag(textareaId, tag) {
     } else {
         replacement = `<${tag}>${selectedText}</${tag}>`;
     }
-    
+
     textarea.value = text.substring(0, start) + replacement + text.substring(end);
     textarea.focus();
     textarea.setSelectionRange(start + replacement.length, start + replacement.length);
 }
 
-// Окна редактора
-
 function slugify(text) {
-    return text
-        .toString()
+    return String(text ?? '')
         .toLowerCase()
         .trim()
-        .replace(/\s+/g, '-')           // Заменяет пробелы на дефисы
-        .replace(/[^\w\-]+/g, '')       // Удаляет все спецсимволы, кроме латиницы, цифр и дефисов
-        .replace(/\-\-+/g, '-');        // Схлопывает множественные дефисы в один
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+|-+$/g, '');
 }
 
-// Привязываем автозаполнение слага к английскому заголовку при первой загрузке скрипта
+function getCustomNews() {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(CUSTOM_NEWS_STORAGE_KEY) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        console.warn('Woolly Bunny: поврежденные данные пользовательских новостей. Используется пустой список.', error);
+        return [];
+    }
+}
+
+function saveCustomNews(items) {
+    localStorage.setItem(CUSTOM_NEWS_STORAGE_KEY, JSON.stringify(items));
+}
+
+// Автозаполнение slug по английскому заголовку только при создании.
 document.addEventListener("DOMContentLoaded", () => {
     const titleEnInput = document.getElementById('newsTitleEn');
-    if (titleEnInput) {
-        titleEnInput.addEventListener('input', (e) => {
-            const isEditing = document.getElementById('editNewsId').value;
-            // Автозаполнение работает только при создании новой новости, чтобы не ломать старые ссылки при редактировании
-            if (!isEditing) {
-                document.getElementById('newsSlug').value = slugify(e.target.value);
-            }
-        });
-    }
+    if (!titleEnInput) return;
+
+    titleEnInput.addEventListener('input', event => {
+        const editId = document.getElementById('editNewsId')?.value;
+        if (!editId) {
+            const slugInput = document.getElementById('newsSlug');
+            if (slugInput) slugInput.value = slugify(event.target.value);
+        }
+    });
 });
 
 function openEditorModal(newsId = '') {
+    if (!isAdminMode) {
+        openAdminModal();
+        return;
+    }
+
     const modal = document.getElementById('editorModal');
+    if (!modal) return;
+
     document.getElementById('editNewsId').value = newsId;
-    
+
+    const customNews = getCustomNews();
+
     if (newsId) {
-        document.getElementById('editorModalTitle').innerText = "Редактирование новости";
-        const customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
-        const item = customNews.find(n => n.id === newsId);
-        if (item) {
-            document.getElementById('newsImgUrl').value = item.image || '';
-            document.getElementById('newsSlug').value = item.slug || item.id; // Загружаем текущий слаг
-            document.getElementById('newsTitleRu').value = item.title.ru || '';
-            document.getElementById('newsContentRu').value = item.content.ru || '';
-            document.getElementById('newsTitleEn').value = item.title.en || '';
-            document.getElementById('newsContentEn').value = item.content.en || '';
+        const item = customNews.find(news => news.id === newsId);
+
+        if (!item) {
+            alert('Не удалось найти эту новость в локальном хранилище.');
+            return;
         }
+
+        document.getElementById('editorModalTitle').innerText = "Редактирование новости";
+        document.getElementById('newsImgUrl').value = item.image || '';
+        document.getElementById('newsSlug').value = item.slug || item.id || '';
+        document.getElementById('newsTitleRu').value = item.title?.ru || '';
+        document.getElementById('newsContentRu').value = item.content?.ru || '';
+        document.getElementById('newsTitleEn').value = item.title?.en || '';
+        document.getElementById('newsContentEn').value = item.content?.en || '';
     } else {
         document.getElementById('editorModalTitle').innerText = "Создание новости";
         document.getElementById('newsImgUrl').value = '';
@@ -3022,134 +3110,214 @@ function openEditorModal(newsId = '') {
         document.getElementById('newsTitleEn').value = '';
         document.getElementById('newsContentEn').value = '';
     }
+
     modal.classList.remove('hidden');
 }
 
-
 function saveNews() {
-    const id = document.getElementById('editNewsId').value;
-    const image = document.getElementById('newsImgUrl').value || 'https://via.placeholder.com/800x450';
-    const titleRu = document.getElementById('newsTitleRu').value;
-    const contentRu = document.getElementById('newsContentRu').value;
-    const titleEn = document.getElementById('newsTitleEn').value;
-    const contentEn = document.getElementById('newsContentEn').value;
-    
-    // Фильтруем кастомный слаг пользователя на случай пробелов или спецсимволов
-    let slug = slugify(document.getElementById('newsSlug').value);
-    
+    if (!isAdminMode) {
+        alert('Доступ запрещен. Войдите как администратор.');
+        return;
+    }
+
+    const id = document.getElementById('editNewsId').value.trim();
+    const image = document.getElementById('newsImgUrl').value.trim() || 'https://via.placeholder.com/800x450';
+    const titleRu = document.getElementById('newsTitleRu').value.trim();
+    const contentRu = document.getElementById('newsContentRu').value.trim();
+    const titleEn = document.getElementById('newsTitleEn').value.trim();
+    const contentEn = document.getElementById('newsContentEn').value.trim();
+
     if (!titleRu || !contentRu || !titleEn || !contentEn) {
         alert('Заполните заголовки и текст для обеих версий языков!');
         return;
     }
-    
+
+    let slug = slugify(document.getElementById('newsSlug').value);
     if (!slug) {
-        slug = slugify(titleEn) || 'news-' + Date.now();
+        slug = slugify(titleEn) || `news-${Date.now()}`;
     }
-    
-    let customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
-    const today = new Date().toLocaleDateString('ru-RU', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '.');
+
+    const customNews = getCustomNews();
+
+    // Slug должен быть уникален не только среди пользовательских новостей,
+    // но и среди встроенных новостей сайта.
+    const slugTakenByOtherCustom = customNews.some(item => item.slug === slug && item.id !== id);
+    const slugTakenByBuiltIn = newsData.some(item => item.slug === slug && item.slug !== id);
+
+    if (slugTakenByOtherCustom || slugTakenByBuiltIn) {
+        alert('Ошибка: Новость с таким URL-постфиксом уже существует. Выберите другой.');
+        return;
+    }
+
+    const today = new Date().toLocaleDateString('ru-RU', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
 
     if (id) {
-        // При редактировании проверяем, не занят ли новый слаг другой новостью
-        if (id !== slug && customNews.some(item => item.slug === slug)) {
-            alert('Ошибка: Новость с таким URL-постфиксом уже существует. Придумайте другой!');
+        const index = customNews.findIndex(item => item.id === id);
+
+        if (index === -1) {
+            alert('Не удалось найти редактируемую новость.');
             return;
         }
-        customNews = customNews.map(item => {
-            if (item.id === id) {
-                return { ...item, image, slug, id: slug, title: { ru: titleRu, en: titleEn }, content: { ru: contentRu, en: contentEn } };
-            }
-            return item;
-        });
-    } else {
-        // При создании новой проверяем уникальность ссылки
-        if (customNews.some(item => item.slug === slug)) {
-            alert('Ошибка: Новость с таким URL-постфиксом уже существует. Измените поле ссылки!');
-            return;
-        }
-        const newPost = {
-            id: slug, // Теперь ID совпадает со слагом для бесшовного роутинга
-            slug: slug,
-            date: today,
-            image: image,
+
+        customNews[index] = {
+            ...customNews[index],
+            id: slug,
+            slug,
+            image,
             title: { ru: titleRu, en: titleEn },
             content: { ru: contentRu, en: contentEn }
         };
-        customNews.unshift(newPost);
+    } else {
+        customNews.unshift({
+            id: slug,
+            slug,
+            date: today,
+            image,
+            title: { ru: titleRu, en: titleEn },
+            content: { ru: contentRu, en: contentEn }
+        });
     }
-    
-    localStorage.setItem('wbCustomNews', JSON.stringify(customNews));
+
+    saveCustomNews(customNews);
+
     alert('Новость успешно сохранена!');
     closeEditorModal();
-    location.reload();
+
+    // Пересобираем newsData из базовых новостей + пользовательских,
+    // чтобы редактор сразу работал с актуальными данными без ручных
+    // перезагрузок страницы.
+    rebuildNewsDataFromStorage();
+
+    updateAdminUI();
+    setLang(state.lang);
+    handleNewsRoute();
 }
 
 function deleteNews(id) {
-    if (confirm('Вы уверены, что хотите удалить эту новость?')) {
-        let customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
-        customNews = customNews.filter(item => item.id !== id);
-        localStorage.setItem('wbCustomNews', JSON.stringify(customNews));
-        location.reload();
+    if (!isAdminMode) {
+        alert('Доступ запрещен. Войдите как администратор.');
+        return;
     }
+
+    if (!confirm('Вы уверены, что хотите удалить эту новость?')) return;
+
+    const customNews = getCustomNews().filter(item => item.id !== id);
+    saveCustomNews(customNews);
+
+    rebuildNewsDataFromStorage();
+
+    if (currentSlug === id) {
+        history.pushState(null, '', getNewsPageHash(state.page));
+        hideArticle();
+    }
+
+    updateAdminUI();
+    setLang(state.lang);
+    handleNewsRoute();
 }
 
-// Внедрение кнопки "Создать"
-function injectAdminControls() {
-    const newsContainer = document.getElementById('news').querySelector('.max-w-5xl'); 
-    if (newsContainer && !document.getElementById('adminAddNewsBtn')) {
-        const addBtn = document.createElement('button');
-        addBtn.id = 'adminAddNewsBtn';
-        addBtn.className = 'mx-auto block mb-8 bg-amber-600 hover:bg-amber-500 text-black px-6 py-2.5 rounded font-bold font-mono text-sm uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-amber-600/10 border border-amber-700 animate-pulse';
-        addBtn.innerText = '+ Создать новую новость';
-        addBtn.onclick = () => openEditorModal('');
-        newsContainer.insertBefore(addBtn, document.getElementById('newsList'));
-    }
+function syncAdminControls() {
+    const newsSection = document.getElementById('news');
+    const list = document.getElementById('newsList');
+    if (!newsSection || !list) return;
+
+    const existing = document.getElementById('adminNewsToolbar');
+    if (existing) existing.remove();
+
+    if (!isAdminMode) return;
+
+    const toolbar = document.createElement('div');
+    toolbar.id = 'adminNewsToolbar';
+    toolbar.className = 'mb-7 flex flex-wrap items-center justify-between gap-4 border border-amber-900/60 bg-black/60 px-4 py-3 relative z-20';
+
+    toolbar.innerHTML = `
+        <div>
+            <div class="font-mono text-[10px] uppercase tracking-[0.25em] text-amber-500">ADMIN MODE</div>
+            <div class="font-mono text-xs text-zinc-500">Редактор новостей активен</div>
+        </div>
+        <button type="button"
+            class="bg-amber-600 hover:bg-amber-500 text-black px-5 py-2 font-bold font-mono text-sm uppercase tracking-wider transition-all cursor-pointer border border-amber-700"
+            onclick="openEditorModal('')">
+            + Создать новость
+        </button>`;
+
+    // Вставляем панель перед самим списком, а не внутрь #newsList.
+    list.parentNode.insertBefore(toolbar, list);
 }
 
 function removeAdminControls() {
-    const btn = document.getElementById('adminAddNewsBtn');
-    if (btn) btn.remove();
+    const toolbar = document.getElementById('adminNewsToolbar');
+    if (toolbar) toolbar.remove();
 }
 
-// --- ФИКС: Адаптация кастомных новостей под оригинальный массив ---
-function loadAndMergeCustomNews() {
-    const customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
-    
-    const formattedNews = customNews.map(item => ({
+// --- Адаптация пользовательских новостей под основной массив ---
+function formatCustomNews(item) {
+    const ruContent = item.content?.ru || '';
+    const enContent = item.content?.en || '';
+
+    return {
         id: item.id,
-        slug: item.id,
+        slug: item.slug || item.id,
         badge: 'NEWS',
-        date: item.date,
-        title: item.title.en,
-        titleRu: item.title.ru,
-        // Очищаем HTML теги для краткого описания в карточке
-        excerptEn: item.content.en.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...',
-        excerptRu: item.content.ru.replace(/<[^>]*>?/gm, '').substring(0, 100) + '...',
-        image: item.image,
+        date: item.date || '',
+        title: item.title?.en || '',
+        titleRu: item.title?.ru || '',
+        excerptEn: enContent.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim().substring(0, 100) + '...',
+        excerptRu: ruContent.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim().substring(0, 100) + '...',
+        image: item.image || 'https://via.placeholder.com/800x450',
         content: `
-            <div class="lang-en">\n<p class="mb-4">${item.content.en}</p>\n</div>
-            <div class="lang-ru hidden">\n<p class="mb-4">${item.content.ru}</p>\n</div>
+            <div class="lang-en article-custom-content">${enContent}</div>
+            <div class="lang-ru hidden article-custom-content">${ruContent}</div>
         `,
-        isCustom: true // Флаг для отображения кнопок админа
-    }));
-
-    // Добавляем созданные новости в начало стандартного массива ДО рендера
-    newsData.unshift(...formattedNews);
+        isCustom: true
+    };
 }
 
-// Добавляем кнопки редактирования/удаления в существующие карточки администратора.
+function rebuildNewsDataFromStorage() {
+    // Сохраняем только встроенные новости, затем добавляем пользовательские.
+    // Это предотвращает дублирование при повторном сохранении/удалении.
+    const builtInNews = newsData.filter(item => !item.isCustom);
+
+    newsData.length = 0;
+    newsData.push(...getCustomNews().map(formatCustomNews), ...builtInNews);
+}
+
+function loadAndMergeCustomNews() {
+    rebuildNewsDataFromStorage();
+}
+
+// Админские кнопки для пользовательских карточек.
+// Делаем их частью шаблона карточки, а не отдельной DOM-инъекцией,
+// поэтому они не исчезают при переключении страницы или языка.
 const originalCardTemplate = cardTemplate;
 cardTemplate = function(data) {
     let cardHtml = originalCardTemplate(data);
 
     if (isAdminMode && data.isCustom) {
         const adminButtonsHtml = `
-            <div class="mt-4 flex gap-2 pt-3 text-xs font-mono relative z-20 border-t border-gray-800" onclick="event.stopPropagation();">
-                <button onclick="openEditorModal('${escapeHtml(data.id)}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer">Редактировать</button>
-                <button onclick="deleteNews('${escapeHtml(data.id)}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-500 hover:text-white rounded transition-all cursor-pointer">Удалить</button>
+            <div class="mt-4 flex flex-wrap gap-2 pt-3 text-xs font-mono relative z-30 border-t border-gray-800"
+                 onclick="event.stopPropagation();">
+                <button type="button"
+                    onclick="event.stopPropagation(); openEditorModal('${escapeHtml(data.id)}')"
+                    class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer">
+                    Редактировать
+                </button>
+                <button type="button"
+                    onclick="event.stopPropagation(); deleteNews('${escapeHtml(data.id)}')"
+                    class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-500 hover:text-white rounded transition-all cursor-pointer">
+                    Удалить
+                </button>
             </div>`;
 
-        cardHtml = cardHtml.replace('\n                    </div>\n                </article>', '\n                    ' + adminButtonsHtml + '\n                    </div>\n                </article>');
+        // Вставляем панель в нижнюю часть правой колонки карточки.
+        cardHtml = cardHtml.replace(
+            '</div>\n                </article>',
+            adminButtonsHtml + '\n                    </div>\n                </article>'
+        );
     }
 
     return cardHtml;
@@ -3227,14 +3395,16 @@ function insertLink(textareaId) {
     textarea.setSelectionRange(start + replacement.length, start + replacement.length);
 }
 
-function closeEditorModal() { 
-    document.getElementById('editorModal').classList.add('hidden'); 
+function closeEditorModal() {
+    const modal = document.getElementById('editorModal');
+    if (modal) modal.classList.add('hidden');
 }
 		
 // Initialize Default
         loadAndMergeCustomNews();
+        state.lang = getInitialLanguage();
         updateAdminUI();
-        setLang(getInitialLanguage());
+        setLang(state.lang);
         handleNewsRoute();
     </script>
 </body>

@@ -2328,11 +2328,52 @@
 			root.querySelectorAll('.lang-ru').forEach(el => el.classList.toggle('hidden', state.lang !== 'ru'));
 		}
 
+		function escapeHtml(value) {
+			return String(value)
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#039;');
+		}
+
+		function bindAdminNewsControls() {
+			newsListEl.querySelectorAll('.news-admin-controls').forEach(container => {
+				const newsId = container.dataset.newsId;
+
+				container.addEventListener('click', event => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					const button = event.target.closest('[data-news-action]');
+					if (!button || !newsId || !isAdminMode)
+						return;
+
+					if (button.dataset.newsAction === 'edit') {
+						openEditorModal(newsId);
+					} else if (button.dataset.newsAction === 'delete') {
+						deleteNews(newsId);
+					}
+				});
+			});
+		}
+
 		// ===================== NEWS LIST (CARDS) =====================
 		function cardTemplate(n){
 			const title = state.lang === 'ru' ? n.titleRu : n.title;
 			const excerpt = state.lang === 'ru' ? n.excerptRu : n.excerptEn;
 			const readMore = state.lang === 'ru' ? 'Читать полностью' : 'Read Full Report';
+			const adminControls = (typeof isAdminMode !== 'undefined' && isAdminMode && n.isCustom)
+				? `
+					<div class="news-admin-controls mt-5 pt-4 border-t border-gray-800 flex flex-wrap gap-2 relative z-20" data-news-id="${escapeHtml(String(n.id))}">
+						<button type="button" data-news-action="edit" class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer font-mono text-xs uppercase tracking-wider">
+							<span class="lang-ru">Редактировать</span><span class="lang-en">Edit</span>
+						</button>
+						<button type="button" data-news-action="delete" class="px-3 py-1.5 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-600 hover:text-white rounded transition-all cursor-pointer font-mono text-xs uppercase tracking-wider">
+							<span class="lang-ru">Удалить</span><span class="lang-en">Delete</span>
+						</button>
+					</div>`
+				: '';
 			return `
 			<article class="news-card group grunge-card cursor-pointer flex flex-col md:flex-row gap-6 overflow-hidden" onclick="openArticle('${n.slug}')">
 				<div class="relative w-full md:w-72 flex-shrink-0 overflow-hidden bg-black">
@@ -2346,6 +2387,7 @@
 					<span class="font-stencil text-xs text-white inline-flex items-center gap-2 group-hover:gap-4 transition-all">
 						${readMore} <span>&rarr;</span>
 					</span>
+					${adminControls}
 				</div>
 			</article>`;
 		}
@@ -2354,6 +2396,7 @@
 			const start = (state.page - 1) * state.pageSize;
 			const items = newsData.slice(start, start + state.pageSize);
 			newsListEl.innerHTML = items.map(cardTemplate).join('');
+			bindAdminNewsControls();
 			renderPagination();
 		}
 
@@ -3101,12 +3144,49 @@ function saveNews() {
 }
 
 function deleteNews(id) {
-    if (confirm('Вы уверены, что хотите удалить эту новость?')) {
-        let customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
-        customNews = customNews.filter(item => item.id !== id);
-        localStorage.setItem('wbCustomNews', JSON.stringify(customNews));
-        location.reload();
+    if (!isAdminMode) return;
+
+    let customNews;
+    try {
+        customNews = JSON.parse(localStorage.getItem('wbCustomNews') || '[]');
+    } catch (error) {
+        console.error('Не удалось прочитать пользовательские новости:', error);
+        alert('Не удалось удалить новость: данные новостей повреждены.');
+        return;
     }
+
+    const news = customNews.find(item => item.id === id);
+    if (!news) {
+        alert('Новость не найдена. Возможно, она уже была удалена.');
+        return;
+    }
+
+    const title = news.title?.ru || news.title?.en || id;
+    const message = state.lang === 'ru'
+        ? `Удалить новость «${title}»? Это действие нельзя отменить.`
+        : `Delete “${title}”? This action cannot be undone.`;
+
+    if (!confirm(message)) return;
+
+    customNews = customNews.filter(item => item.id !== id);
+    localStorage.setItem('wbCustomNews', JSON.stringify(customNews));
+
+    // Убираем новость из открытого просмотра, если она была открыта.
+    if (currentSlug === news.slug || currentSlug === news.id) {
+        currentSlug = null;
+        articleViewEl.classList.add('hidden');
+        document.body.classList.remove('news-open');
+        history.replaceState(null, '', location.pathname + location.search);
+    }
+
+    // Пересобираем массив новостей без перезагрузки страницы.
+    newsData = newsData.filter(item => !(item.isCustom && item.id === id));
+
+    const totalPages = Math.max(1, Math.ceil(newsData.length / state.pageSize));
+    if (state.page > totalPages) state.page = totalPages;
+
+    renderNewsList();
+    updateAdminUI();
 }
 
 // Внедрение кнопки "Создать"
@@ -3155,24 +3235,6 @@ function loadAndMergeCustomNews() {
 
 // Запускаем слияние до инициализации сайта
 loadAndMergeCustomNews();
-
-// Модифицируем оригинальную функцию карточки, чтобы добавить кнопки ред./уд. только для админа
-const originalRenderNewsCard = renderNewsCard;
-renderNewsCard = function(data, index) {
-    let cardHtml = originalRenderNewsCard(data, index);
-    
-    if (isAdminMode && data.isCustom) {
-        const adminButtonsHtml = `
-            <div class="mt-4 flex gap-2 pt-3 text-xs font-mono relative z-10 border-t border-gray-800" onclick="event.preventDefault(); event.stopPropagation();">
-                <button onclick="openEditorModal('${data.id}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-amber-500 hover:bg-amber-500 hover:text-black rounded transition-all cursor-pointer">Редактировать</button>
-                <button onclick="deleteNews('${data.id}')" class="px-3 py-1 bg-zinc-900 border border-zinc-700 text-red-500 hover:bg-red-500 hover:text-white rounded transition-all cursor-pointer">Удалить</button>
-            </div>
-        `;
-        // Безопасно встраиваем кнопки внутрь карточки перед закрывающим тегом
-        cardHtml = cardHtml.replace(/(<\/div>\s*<\/a>)/, adminButtonsHtml + '$1');
-    }
-    return cardHtml;
-};
 
 function insertImage(textareaId) {
     const url = prompt("Введите URL-ссылку на изображение:");
